@@ -196,7 +196,12 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* EXISTING STYLES */
+        /* HIDDEN BY DEFAULT */
+        .main-app {
+            display: none;
+        }
+
+        /* BASIC STYLES FOR MAIN APP */
         .container {
             max-width: 100%;
             margin: 0 auto;
@@ -210,7 +215,6 @@
             margin-bottom: 20px;
             text-align: center;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            position: relative;
         }
 
         .header h1 {
@@ -223,6 +227,16 @@
         .header p {
             color: #6b7280;
             font-size: 0.9rem;
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: #1f2937;
         }
 
         .tabs {
@@ -252,8 +266,6 @@
             gap: 4px;
             color: #6b7280;
             transition: all 0.2s ease;
-            touch-action: manipulation;
-            -webkit-user-select: none;
         }
 
         .tab-icon {
@@ -266,1190 +278,237 @@
             transform: translateY(-2px);
         }
 
-        .content {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* CALENDARIO */
-        .calendar-container {
-            margin-bottom: 20px;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 0 10px;
-        }
-
-        .calendar-nav {
-            background: #4f46e5;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
-        }
-
-        .calendar-nav:hover {
-            background: #4338ca;
-            transform: scale(1.1);
-        }
-
-        .calendar-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1f2937;
-            text-align: center;
-            flex: 1;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
-            background: #f3f4f6;
-            border-radius: 10px;
-            padding: 2px;
-            overflow: hidden;
-        }
-
-        .calendar-day-header {
-            background: #374151;
-            color: white;
-            padding: 8px 4px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.7rem;
-        }
-
-        .calendar-day {
-            background: white;
-            min-height: 60px;
-            padding: 4px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-        }
-
-        .calendar-day:hover {
-            background: #f9fafb;
-            transform: scale(1.02);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .calendar-day.other-month {
-            background: #f9fafb;
-            color: #9ca3af;
-        }
-
-        .calendar-day.today {
-            background: #4f46e5;
-            color: white;
-            font-weight: 700;
-        }
-
-        .calendar-day.today:hover {
-            background: #4338ca;
-        }
-
-        .day-number {
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 2px;
-        }
-
-        .day-tasks {
-            width: 100%;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-        }
-
-        .task-dot {
-            width: 100%;
-            height: 3px;
-            border-radius: 2px;
-            margin: 1px 0;
-        }
-
-        .task-dot.todo { background: #f59e0b; }
-        .task-dot.deadline { background: #dc2626; }
-
-        /* Day Popup */
-        .day-popup {
-            position: absolute;
-            background: white;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            z-index: 3000;
-            min-width: 280px;
-            max-width: 320px;
-            border: 2px solid #4f46e5;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.3s ease;
-            pointer-events: none;
-        }
-
-        .day-popup.show {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-        }
-
-        .day-popup-header {
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #f3f4f6;
-            font-size: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .day-popup-close {
-            cursor: pointer;
-            color: #9ca3af;
-            font-size: 1.4rem;
-            width: 24px;
-            height: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.2s ease;
-            margin-left: 10px;
-        }
-
-        .day-popup-close:hover {
-            background: rgba(0, 0, 0, 0.1);
-            color: #dc2626;
-        }
-
-        .day-popup-section {
-            margin-bottom: 15px;
-        }
-
-        .day-popup-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .day-popup-section-title {
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .day-popup-task {
-            background: #f9fafb;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            border-left: 3px solid;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .day-popup-task:hover {
-            background: #f3f4f6;
-            transform: translateX(2px);
-        }
-
-        .day-popup-task:last-child {
-            margin-bottom: 0;
-        }
-
-        .day-popup-task.todo {
-            border-left-color: #f59e0b;
-        }
-
-        .day-popup-task.deadline {
-            border-left-color: #dc2626;
-        }
-
-        .day-popup-task-content {
-            flex: 1;
-        }
-
-        .day-popup-task-title {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 0.85rem;
-            margin-bottom: 2px;
-        }
-
-        .day-popup-task-actions {
-            display: flex;
-            gap: 2px;
-            margin-left: 8px;
-        }
-
-        .day-popup-action-btn {
-            width: 22px;
-            height: 22px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            transition: all 0.2s ease;
-        }
-
-        .day-popup-action-btn.complete {
-            background: #10b981;
-            color: white;
-        }
-
-        .day-popup-action-btn.complete:hover {
-            background: #059669;
-            transform: scale(1.1);
-        }
-
-        .day-popup-action-btn.edit {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .day-popup-action-btn.edit:hover {
-            background: #d97706;
-            transform: scale(1.1);
-        }
-
-        .day-popup-action-btn.delete {
-            background: #dc2626;
-            color: white;
-        }
-
-        .day-popup-action-btn.delete:hover {
-            background: #b91c1c;
-            transform: scale(1.1);
-        }
-
-        .empty-day {
-            color: #9ca3af;
-            font-style: italic;
-            font-size: 0.9rem;
-            text-align: center;
-            padding: 20px 10px;
-        }
-
-        /* Task Detail Popup */
-        .task-detail-popup {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 4000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            backdrop-filter: blur(5px);
-        }
-
-        .task-detail-popup.show {
-            display: flex;
-        }
-
-        .task-detail-content {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .task-detail-popup.show .task-detail-content {
-            transform: scale(1);
-        }
-
-        .task-detail-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .task-detail-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1f2937;
-            flex: 1;
-            margin-right: 15px;
-        }
-
-        .task-detail-close {
-            cursor: pointer;
-            color: #9ca3af;
-            font-size: 1.5rem;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.2s ease;
-        }
-
-        .task-detail-close:hover {
-            background: rgba(0, 0, 0, 0.1);
-            color: #dc2626;
-        }
-
-        .task-detail-description {
-            color: #6b7280;
-            line-height: 1.5;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
-
-        .task-detail-meta {
-            background: #f9fafb;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 20px;
-            font-size: 0.85rem;
-        }
-
-        .task-detail-meta-item {
-            margin-bottom: 5px;
-            color: #374151;
-        }
-
-        .task-detail-meta-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .task-detail-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .task-detail-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        .task-detail-btn.complete {
-            background: #10b981;
-            color: white;
-        }
-
-        .task-detail-btn.complete:hover {
-            background: #059669;
-            transform: translateY(-1px);
-        }
-
-        .task-detail-btn.edit {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .task-detail-btn.edit:hover {
-            background: #d97706;
-            transform: translateY(-1px);
-        }
-
-        .task-detail-btn.delete {
-            background: #dc2626;
-            color: white;
-        }
-
-        .task-detail-btn.delete:hover {
-            background: #b91c1c;
-            transform: translateY(-1px);
-        }
-
-        /* TASKS - NEW SUB-TAB SYSTEM */
-        .tasks-header {
-            display: flex;
-            background: #f3f4f6;
-            border-radius: 10px;
-            padding: 4px;
-            margin-bottom: 20px;
-            gap: 4px;
-        }
-
-        .tasks-subtab {
-            flex: 1;
-            padding: 12px 16px;
-            border-radius: 6px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            color: #6b7280;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .tasks-subtab.active {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-            color: white;
-            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
-        }
-
-        .tasks-subtab:hover:not(.active) {
-            background: rgba(79, 70, 229, 0.1);
-            color: #4f46e5;
-        }
-
-        .tasks-content {
-            display: none;
-        }
-
-        .tasks-content.active {
-            display: block;
-        }
-
-        .tasks-section {
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            color: #1f2937;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: space-between;
-        }
-
-        .section-title-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .add-task-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.2s ease;
-            touch-action: manipulation;
-        }
-
-        .add-task-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .export-btn {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .export-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-
-        /* MODIFIED TASK CARD STYLES */
-        .task-card {
-            background: white;
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #4f46e5;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            position: relative;
-        }
-
-        .task-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .task-card.todo {
-            border-left-color: #f59e0b;
-        }
-
-        .task-card.deadline {
-            border-left-color: #dc2626;
-        }
-
-        /* IMPROVED TASK HEADER - BUTTONS MOVED TO RIGHT */
-        .task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            gap: 12px;
-        }
-
-        .task-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1f2937;
-            flex: 1;
-            margin-right: 8px;
-        }
-
-        /* COMPACT HEADER BUTTONS */
-        .task-header-buttons {
-            display: flex;
-            gap: 4px;
-            flex-shrink: 0;
-        }
-
-        .task-header-btn {
-            width: 30px;
-            height: 30px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            touch-action: manipulation;
-        }
-
-        .task-header-btn.complete {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-        }
-
-        .task-header-btn.complete:hover {
-            background: linear-gradient(135deg, #059669, #047857);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
-        }
-
-        .task-header-btn.edit {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-        }
-
-        .task-header-btn.edit:hover {
-            background: linear-gradient(135deg, #d97706, #b45309);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
-        }
-
-        .task-header-btn.delete {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            color: white;
-        }
-
-        .task-header-btn.delete:hover {
-            background: linear-gradient(135deg, #b91c1c, #991b1b);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
-        }
-
-        /* ALWAYS VISIBLE DESCRIPTION BOX */
-        .task-description-box {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-            color: #6b7280;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
-        }
-
-        .task-description-box.empty {
-            color: #9ca3af;
-            font-style: italic;
-        }
-
-        .task-dates {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 0;
-            font-size: 0.8rem;
-        }
-
-        .task-date {
-            background: #f3f4f6;
-            padding: 4px 8px;
-            border-radius: 6px;
-            color: #374151;
-        }
-
-        .task-date.deadline {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-
-        .task-date.overdue {
-            background: #dc2626;
-            color: white;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 10px;
-            touch-action: manipulation;
-            transition: transform 0.1s ease;
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
-        }
-
-        .btn-cancel {
-            background: linear-gradient(135deg, #9ca3af, #6b7280);
-        }
-
-        .empty-state {
-            text-align: center;
-            color: #9ca3af;
-            padding: 30px 20px;
-            font-size: 1rem;
-        }
-
-        /* MODAL */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: calc(100% - 40px);
-            max-width: 400px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal h3 {
-            margin-bottom: 20px;
-            color: #1f2937;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 0.9rem;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #f3f4f6;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 16px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #4f46e5;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .close {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 24px;
-            color: #9ca3af;
-            cursor: pointer;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        .close:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* HISTORY STYLES WITH NOTES SYSTEM */
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .history-item {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #10b981;
-        }
-
-        .history-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-
-        .history-item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .history-date {
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
-        }
-
-        .history-task-name {
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 3px;
-            word-wrap: break-word;
-        }
-
-        .history-task-description {
-            color: #6b7280;
-            font-size: 0.85rem;
-            line-height: 1.4;
-            word-wrap: break-word;
-        }
-
-        .history-note-btn {
-            background: white;
-            border: 2px solid #374151;
-            color: #374151;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-            flex-shrink: 0;
-            min-width: 100px;
-            text-align: center;
-        }
-
-        .history-note-btn:hover {
-            background: #f9fafb;
-            transform: translateY(-1px);
-        }
-
-        .history-note-btn.has-note {
-            background: #10b981;
-            border-color: #10b981;
-            color: white;
-        }
-
-        .history-note-btn.has-note:hover {
-            background: #059669;
-            border-color: #059669;
-        }
-
-        .history-note {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-left: 4px solid #10b981;
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-top: 12px;
-            position: relative;
-        }
-
-        .history-note-content {
-            color: #374151;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            margin-bottom: 8px;
-            word-wrap: break-word;
-        }
-
-        .history-note-date {
-            color: #6b7280;
-            font-size: 0.75rem;
-            font-style: italic;
-        }
-
-        .history-note-actions {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            display: flex;
-            gap: 4px;
-        }
-
-        .history-note-action {
-            background: rgba(255, 255, 255, 0.8);
-            border: 1px solid #d1d5db;
-            color: #6b7280;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .history-note-action:hover {
-            background: white;
-            color: #374151;
-        }
-
-        .history-note-action.delete:hover {
-            color: #dc2626;
-            border-color: #dc2626;
-        }
-
-        /* NOTES - IMPROVED WITH EDIT/DELETE */
-        .notes-section {
-            margin-bottom: 30px;
-        }
-
-        .notes-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #f3f4f6;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 16px;
-            resize: vertical;
-            min-height: 100px;
-            margin-bottom: 15px;
-        }
-
-        .notes-input:focus {
-            outline: none;
-            border-color: #4f46e5;
-        }
-
-        .notes-item {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #4f46e5;
-            position: relative;
-        }
-
-        .notes-date {
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-        }
-
-        .notes-text {
-            color: #6b7280;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            margin-bottom: 10px;
-            padding-right: 60px;
-            word-wrap: break-word;
-        }
-
-        .notes-actions {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            display: flex;
-            gap: 4px;
-        }
-
-        .notes-action-btn {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid #d1d5db;
-            color: #6b7280;
-            padding: 6px 8px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-        }
-
-        .notes-action-btn:hover {
-            background: white;
-            color: #374151;
-            transform: translateY(-1px);
-        }
-
-        .notes-action-btn.edit:hover {
-            color: #f59e0b;
-            border-color: #f59e0b;
-        }
-
-        .notes-action-btn.delete:hover {
-            color: #dc2626;
-            border-color: #dc2626;
-        }
-
-        /* Loading and success states */
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .success-message {
-            background: #10b981;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: center;
-            font-weight: 600;
-            animation: fadeInOut 3s ease-in-out;
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            10%, 90% { opacity: 1; }
-        }
-
-        /* Responsive improvements */
         @media (max-width: 480px) {
-            .task-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            
-            .task-header-buttons {
-                align-self: flex-end;
-                gap: 6px;
-            }
-            
-            .task-header-btn {
-                width: 32px;
-                height: 32px;
-            }
-            
-            .day-popup {
-                min-width: 260px;
-                max-width: 300px;
-            }
-            
-            .task-detail-content {
-                margin: 10px;
-                width: calc(100% - 20px);
-            }
-            
             .auth-form {
                 padding: 30px 20px;
             }
         }
-
-        /* Firebase sync indicator */
-        .sync-indicator {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: #6b7280;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            z-index: 5000;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .sync-indicator.show {
-            opacity: 1;
-        }
-
-        .sync-indicator.syncing {
-            color: #f59e0b;
-        }
-
-        .sync-indicator.error {
-            color: #dc2626;
-        }
-
-        .sync-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-
-        .sync-dot.pulse {
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
     </style>
-
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        // Your web app's Firebase configuration
+</head>
+<body>
+    <!-- Firebase SDK - Version 8 -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
+    <script>
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyB0cB4SoPlUOaN5RfXPnVca7nJirx51qNM",
             authDomain: "officeflow-76837.firebaseapp.com",
             projectId: "officeflow-76837",
             storageBucket: "officeflow-76837.firebasestorage.app",
             messagingSenderId: "1041102307856",
-            appId: "1:1041102307856:web:c2cc37d2468e7a25218095",
-            measurementId: "G-1X1ZPQMZVR"
+            appId: "1:1041102307856:web:c2cc37d2468e7a25218095"
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        console.log('🔥 Initializing Firebase...');
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        console.log('✅ Firebase initialized successfully');
+        console.log('🔐 Auth object:', auth);
+        console.log('🗄️ Firestore object:', db);
 
-        // Export to global scope for use in other scripts
-        window.firebase = { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, doc, setDoc, getDoc, onSnapshot, collection, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp };
+        // Global state
+        let currentUser = null;
+
+        // Authentication functions
+        function switchTab(tab) {
+            console.log('🔄 Switching to tab:', tab);
+            
+            const loginTab = document.getElementById('login-tab');
+            const registerTab = document.getElementById('register-tab');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const errorDiv = document.getElementById('auth-error');
+
+            // Hide error
+            errorDiv.style.display = 'none';
+
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                registerForm.style.display = 'block';
+                loginForm.style.display = 'none';
+            }
+        }
+
+        function showError(message) {
+            console.log('❌ Showing error:', message);
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function setLoading(buttonId, isLoading) {
+            const button = document.getElementById(buttonId);
+            if (isLoading) {
+                button.disabled = true;
+                button.innerHTML = '<div class="auth-loading"></div>Caricamento...';
+            } else {
+                button.disabled = false;
+                button.innerHTML = buttonId === 'login-btn' ? 'Accedi' : 'Registrati';
+            }
+        }
+
+        function doLogin() {
+            console.log('🔄 Login function called');
+            
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            console.log('📧 Email:', email);
+            console.log('🔐 Password length:', password ? password.length : 0);
+
+            if (!email || !password) {
+                showError('Inserisci email e password');
+                return;
+            }
+
+            setLoading('login-btn', true);
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    console.log('✅ Login successful:', userCredential.user.email);
+                })
+                .catch((error) => {
+                    console.error('❌ Login error:', error);
+                    let errorMessage = 'Errore durante l\'accesso';
+                    
+                    switch (error.code) {
+                        case 'auth/user-not-found':
+                            errorMessage = 'Account non trovato';
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage = 'Password non corretta';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Email non valida';
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMessage = 'Troppi tentativi. Riprova più tardi';
+                            break;
+                    }
+                    
+                    showError(errorMessage);
+                })
+                .finally(() => {
+                    setLoading('login-btn', false);
+                });
+        }
+
+        function doRegister() {
+            console.log('🔄 Register function called');
+            
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-password-confirm').value;
+
+            console.log('📧 Email:', email);
+            console.log('🔐 Password length:', password ? password.length : 0);
+
+            if (!email || !password || !confirmPassword) {
+                showError('Compila tutti i campi');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('La password deve avere almeno 6 caratteri');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError('Le password non coincidono');
+                return;
+            }
+
+            setLoading('register-btn', true);
+
+            console.log('🚀 Creating user account...');
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    console.log('✅ Registration successful:', userCredential.user.email);
+                })
+                .catch((error) => {
+                    console.error('❌ Registration error:', error);
+                    let errorMessage = 'Errore durante la registrazione';
+                    
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMessage = 'Email già in uso';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Email non valida';
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage = 'Password troppo debole';
+                            break;
+                    }
+                    
+                    showError(errorMessage);
+                })
+                .finally(() => {
+                    setLoading('register-btn', false);
+                });
+        }
+
+        function doLogout() {
+            console.log('🔄 Logout function called');
+            if (confirm('Sei sicuro di voler uscire?')) {
+                auth.signOut()
+                    .then(() => {
+                        console.log('✅ Logout successful');
+                    })
+                    .catch((error) => {
+                        console.error('❌ Logout error:', error);
+                        alert('Errore durante il logout');
+                    });
+            }
+        }
+
+        // Setup authentication state listener
+        console.log('🔗 Setting up auth listener...');
+        auth.onAuthStateChanged((user) => {
+            console.log('👤 Auth state changed:', user ? user.email : 'signed out');
+            
+            if (user) {
+                // User is signed in
+                console.log('✅ User logged in:', user.email);
+                currentUser = user;
+                
+                // Show main app
+                document.getElementById('auth-container').style.display = 'none';
+                document.getElementById('main-app').style.display = 'block';
+                document.getElementById('user-email').textContent = user.email;
+                
+            } else {
+                // User is signed out
+                console.log('👋 User signed out');
+                currentUser = null;
+                
+                // Show auth screen
+                document.getElementById('main-app').style.display = 'none';
+                document.getElementById('auth-container').style.display = 'flex';
+            }
+        });
+
+        // Make functions global
+        window.switchTab = switchTab;
+        window.doLogin = doLogin;
+        window.doRegister = doRegister;
+        window.doLogout = doLogout;
+
+        console.log('🎯 All functions are now global');
     </script>
-</head>
-<body>
-    <!-- Sync Indicator -->
-    <div id="sync-indicator" class="sync-indicator">
-        <div class="sync-dot"></div>
-        <span id="sync-text">Sincronizzato</span>
-    </div>
 
     <!-- Authentication Screen -->
     <div id="auth-container" class="auth-container">
@@ -1458,8 +517,8 @@
             <div class="auth-subtitle">Gestione Attività di Segreteria</div>
             
             <div class="auth-tabs">
-                <div class="auth-tab active" onclick="switchAuthTab('login', this)">Accedi</div>
-                <div class="auth-tab" onclick="switchAuthTab('register', this)">Registrati</div>
+                <div id="login-tab" class="auth-tab active" onclick="switchTab('login')">Accedi</div>
+                <div id="register-tab" class="auth-tab" onclick="switchTab('register')">Registrati</div>
             </div>
 
             <!-- Login Form -->
@@ -1472,7 +531,7 @@
                     <label for="login-password">Password:</label>
                     <input type="password" id="login-password" class="auth-input" placeholder="Password" required>
                 </div>
-                <button id="login-btn" class="auth-btn" onclick="handleLogin()">
+                <button id="login-btn" class="auth-btn" onclick="doLogin()">
                     Accedi
                 </button>
             </div>
@@ -1491,7 +550,7 @@
                     <label for="register-password-confirm">Conferma Password:</label>
                     <input type="password" id="register-password-confirm" class="auth-input" placeholder="Ripeti password" required>
                 </div>
-                <button id="register-btn" class="auth-btn" onclick="handleRegister()">
+                <button id="register-btn" class="auth-btn" onclick="doRegister()">
                     Registrati
                 </button>
             </div>
@@ -1501,12 +560,12 @@
     </div>
 
     <!-- Main App -->
-    <div id="main-app" style="display: none;">
+    <div id="main-app" class="main-app">
         <div class="container">
             <!-- User Info -->
             <div class="user-info">
                 <div class="user-email" id="user-email"></div>
-                <button class="logout-btn" onclick="handleLogout()">Esci</button>
+                <button class="logout-btn" onclick="doLogout()">Esci</button>
             </div>
 
             <div class="header">
@@ -1515,1906 +574,37 @@
             </div>
 
             <div class="content">
-                <!-- Calendario Tab -->
-                <div id="calendar" class="tab-content active">
-                    <div class="calendar-container">
-                        <div class="calendar-header">
-                            <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
-                            <div class="calendar-title" id="calendar-title"></div>
-                            <button class="calendar-nav" onclick="changeMonth(1)">›</button>
-                        </div>
-                        <div class="calendar-grid" id="calendar-grid"></div>
-                    </div>
-                </div>
-
-                <!-- Tasks Tab -->
-                <div id="tasks" class="tab-content">
-                    <div class="tasks-header">
-                        <div class="tasks-subtab active" onclick="showTasksSubtab('todo', this)">
-                            ⏰ Da Fare
-                        </div>
-                        <div class="tasks-subtab" onclick="showTasksSubtab('deadline', this)">
-                            📅 Scadenze
-                        </div>
-                    </div>
-
-                    <!-- Attività Da Fare -->
-                    <div id="todo-content" class="tasks-content active">
-                        <div class="tasks-section">
-                            <div class="section-title">
-                                <div class="section-title-left">
-                                    <span>⏰ Attività Da Fare</span>
-                                </div>
-                                <div style="display: flex; gap: 10px;">
-                                    <button class="export-btn" onclick="exportTasks('todo')" title="Esporta attività da fare">
-                                        📄 Export PDF
-                                    </button>
-                                    <button class="add-task-btn" onclick="openAddTodoModal()" title="Aggiungi attività da fare">
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="todo-tasks"></div>
-                        </div>
-                    </div>
-
-                    <!-- Attività Con Scadenza -->
-                    <div id="deadline-content" class="tasks-content">
-                        <div class="tasks-section">
-                            <div class="section-title">
-                                <div class="section-title-left">
-                                    <span>📅 Attività Con Scadenza</span>
-                                </div>
-                                <div style="display: flex; gap: 10px;">
-                                    <button class="export-btn" onclick="exportTasks('deadline')" title="Esporta attività con scadenza">
-                                        📄 Export PDF
-                                    </button>
-                                    <button class="add-task-btn" onclick="openAddDeadlineModal()" title="Aggiungi attività con scadenza">
-                                        +
-                                    </button>
-                                </div>
-                            </div>
-                            <div id="deadline-tasks"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- History Tab -->
-                <div id="history" class="tab-content">
-                    <div class="history-header">
-                        <h3 class="section-title">✅ Attività Completate</h3>
-                        <button class="export-btn" onclick="exportHistory()" title="Esporta cronologia">
-                            📄 Export PDF
-                        </button>
-                    </div>
-                    <div id="history-list"></div>
-                </div>
-
-                <!-- Notes Tab -->
-                <div id="notes" class="tab-content">
-                    <div class="notes-section">
-                        <h3 class="section-title">📝 Note</h3>
-                        <textarea id="notes-text" class="notes-input" placeholder="Scrivi qui le tue note..."></textarea>
-                        <button class="btn btn-primary" onclick="saveNote()">💾 Salva Nota</button>
-                        <div id="saved-notes" style="margin-top: 20px;"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Day Popup -->
-        <div id="day-popup" class="day-popup">
-            <div class="day-popup-header">
-                <span id="day-popup-date"></span>
-                <div class="day-popup-close" onclick="closeDayPopup()">×</div>
-            </div>
-            <div id="day-popup-content"></div>
-        </div>
-
-        <!-- Task Detail Popup -->
-        <div id="task-detail-popup" class="task-detail-popup">
-            <div class="task-detail-content">
-                <div class="task-detail-header">
-                    <div class="task-detail-title" id="task-detail-title"></div>
-                    <div class="task-detail-close" onclick="closeTaskDetailPopup()">×</div>
-                </div>
-                <div class="task-detail-description" id="task-detail-description"></div>
-                <div class="task-detail-meta" id="task-detail-meta"></div>
-                <div class="task-detail-actions" id="task-detail-actions"></div>
+                <h2>🎉 Benvenuto in OfficeFlow!</h2>
+                <p style="margin-top: 20px;">
+                    La tua app di gestione attività è ora collegata a Firebase.<br>
+                    I tuoi dati si sincronizzano automaticamente tra tutti i dispositivi!
+                </p>
+                <p style="margin-top: 20px; color: #6b7280; font-size: 0.9rem;">
+                    Stiamo completando l'integrazione con tutte le funzionalità...<br>
+                    Presto avrai accesso completo al calendario, attività, note e cronologia!
+                </p>
             </div>
         </div>
 
         <!-- Bottom Navigation -->
         <div class="tabs">
-            <div class="tab active" onclick="showTab('calendar', this)">
+            <div class="tab active">
                 <div class="tab-icon">📅</div>
                 <div>Calendario</div>
             </div>
-            <div class="tab" onclick="showTab('tasks', this)">
+            <div class="tab">
                 <div class="tab-icon">📋</div>
                 <div>Attività</div>
             </div>
-            <div class="tab" onclick="showTab('history', this)">
+            <div class="tab">
                 <div class="tab-icon">✅</div>
                 <div>Storia</div>
             </div>
-            <div class="tab" onclick="showTab('notes', this)">
+            <div class="tab">
                 <div class="tab-icon">📝</div>
                 <div>Note</div>
             </div>
         </div>
-
-        <!-- Modal Attività Da Fare -->
-        <div id="todo-modal" class="modal" onclick="closeTodoModalOnBackground(event)">
-            <div class="modal-content">
-                <span class="close" onclick="closeTodoModal()">&times;</span>
-                <h3>⏰ Nuova Attività Da Fare</h3>
-                
-                <div class="form-group">
-                    <label>Titolo:</label>
-                    <input type="text" id="todo-title" placeholder="es. Controllare email">
-                </div>
-                <div class="form-group">
-                    <label>Descrizione:</label>
-                    <textarea id="todo-description" placeholder="Descrizione dettagliata dell'attività..."></textarea>
-                </div>
-                
-                <div class="modal-buttons">
-                    <button class="btn btn-cancel" onclick="closeTodoModal()">❌ Annulla</button>
-                    <button class="btn" onclick="saveTodoTask()">➕ Aggiungi</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Attività Con Scadenza -->
-        <div id="deadline-modal" class="modal" onclick="closeDeadlineModalOnBackground(event)">
-            <div class="modal-content">
-                <span class="close" onclick="closeDeadlineModal()">&times;</span>
-                <h3>📅 Nuova Attività Con Scadenza</h3>
-                
-                <div class="form-group">
-                    <label>Titolo:</label>
-                    <input type="text" id="deadline-title" placeholder="es. Preparare report mensile">
-                </div>
-                <div class="form-group">
-                    <label>Descrizione:</label>
-                    <textarea id="deadline-description" placeholder="Descrizione dettagliata dell'attività..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Data di inizio:</label>
-                    <input type="date" id="deadline-start-date">
-                </div>
-                <div class="form-group">
-                    <label>Data di scadenza:</label>
-                    <input type="date" id="deadline-due-date">
-                </div>
-                
-                <div class="modal-buttons">
-                    <button class="btn btn-cancel" onclick="closeDeadlineModal()">❌ Annulla</button>
-                    <button class="btn" onclick="saveDeadlineTask()">➕ Aggiungi</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Note Storia -->
-        <div id="history-note-modal" class="modal" onclick="closeHistoryNoteModalOnBackground(event)">
-            <div class="modal-content">
-                <span class="close" onclick="closeHistoryNoteModal()">&times;</span>
-                <h3 id="history-note-modal-title">📝 Aggiungi Nota</h3>
-                
-                <div class="form-group">
-                    <label>Nota:</label>
-                    <textarea id="history-note-text" placeholder="Scrivi qui la nota per questa attività completata..."></textarea>
-                </div>
-                
-                <div class="modal-buttons">
-                    <button class="btn btn-cancel" onclick="closeHistoryNoteModal()">❌ Annulla</button>
-                    <button class="btn" id="history-note-save-btn" onclick="saveHistoryNote()">💾 Salva Nota</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal Modifica Note -->
-        <div id="edit-note-modal" class="modal" onclick="closeEditNoteModalOnBackground(event)">
-            <div class="modal-content">
-                <span class="close" onclick="closeEditNoteModal()">&times;</span>
-                <h3>✏️ Modifica Nota</h3>
-                
-                <div class="form-group">
-                    <label>Nota:</label>
-                    <textarea id="edit-note-text" placeholder="Modifica la tua nota..."></textarea>
-                </div>
-                
-                <div class="modal-buttons">
-                    <button class="btn btn-cancel" onclick="closeEditNoteModal()">❌ Annulla</button>
-                    <button class="btn" onclick="saveEditedNote()">💾 Salva Modifiche</button>
-                </div>
-            </div>
-        </div>
     </div>
-
-    <script>
-        // Global variables
-        let currentUser = null;
-        let currentDate = new Date();
-        let todos = [];
-        let deadlineTasks = [];
-        let completedTasks = [];
-        let notes = [];
-        let editingHistoryNoteTaskId = null;
-        let editingNoteId = null;
-        let currentTasksSubtab = 'todo';
-        let dataListeners = [];
-
-        // Authentication functions
-        function switchAuthTab(type, tabElement) {
-            const tabs = document.querySelectorAll('.auth-tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            tabElement.classList.add('active');
-
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const authError = document.getElementById('auth-error');
-
-            authError.style.display = 'none';
-
-            if (type === 'login') {
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-            } else {
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'block';
-            }
-        }
-
-        function showAuthError(message) {
-            const authError = document.getElementById('auth-error');
-            authError.textContent = message;
-            authError.style.display = 'block';
-        }
-
-        function setAuthLoading(isLoading, buttonId) {
-            const button = document.getElementById(buttonId);
-            if (isLoading) {
-                button.disabled = true;
-                button.innerHTML = '<div class="auth-loading"></div>Caricamento...';
-            } else {
-                button.disabled = false;
-                button.innerHTML = buttonId === 'login-btn' ? 'Accedi' : 'Registrati';
-            }
-        }
-
-        async function handleLogin() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-
-            if (!email || !password) {
-                showAuthError('Inserisci email e password');
-                return;
-            }
-
-            setAuthLoading(true, 'login-btn');
-            
-            try {
-                await window.firebase.signInWithEmailAndPassword(window.firebase.auth, email, password);
-                // Success handled by onAuthStateChanged
-            } catch (error) {
-                console.error('Login error:', error);
-                let errorMessage = 'Errore durante l\'accesso';
-                
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                        errorMessage = 'Account non trovato';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Password non corretta';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Email non valida';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage = 'Troppi tentativi. Riprova più tardi';
-                        break;
-                    default:
-                        errorMessage = error.message;
-                }
-                
-                showAuthError(errorMessage);
-            } finally {
-                setAuthLoading(false, 'register-btn');
-            }
-        }
-
-        async function handleLogout() {
-            if (confirm('Sei sicuro di voler uscire?')) {
-                try {
-                    await window.firebase.signOut(window.firebase.auth);
-                } catch (error) {
-                    console.error('Logout error:', error);
-                    showSuccessMessage('Errore durante il logout');
-                }
-            }
-        }
-
-        // Firebase data management
-        function showSyncIndicator(status, message) {
-            const indicator = document.getElementById('sync-indicator');
-            const dot = indicator.querySelector('.sync-dot');
-            const text = document.getElementById('sync-text');
-
-            indicator.className = 'sync-indicator show';
-            dot.className = 'sync-dot';
-            
-            switch (status) {
-                case 'syncing':
-                    indicator.classList.add('syncing');
-                    dot.classList.add('pulse');
-                    break;
-                case 'error':
-                    indicator.classList.add('error');
-                    break;
-                default:
-                    // success - no additional classes
-            }
-            
-            text.textContent = message;
-            
-            setTimeout(() => {
-                indicator.classList.remove('show');
-            }, 3000);
-        }
-
-        function setupDataListeners() {
-            if (!currentUser) return;
-
-            // Clear existing listeners
-            dataListeners.forEach(unsubscribe => unsubscribe());
-            dataListeners = [];
-
-            const userId = currentUser.uid;
-
-            // Listen to todos
-            const todosQuery = window.firebase.query(
-                window.firebase.collection(window.firebase.db, `users/${userId}/todos`),
-                window.firebase.orderBy('createdAt', 'desc')
-            );
-            
-            const unsubscribeTodos = window.firebase.onSnapshot(todosQuery, (snapshot) => {
-                todos = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
-                    updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-                }));
-                renderTasks();
-                renderCalendar();
-            }, (error) => {
-                console.error('Error listening to todos:', error);
-                showSyncIndicator('error', 'Errore sincronizzazione');
-            });
-            dataListeners.push(unsubscribeTodos);
-
-            // Listen to deadline tasks
-            const deadlinesQuery = window.firebase.query(
-                window.firebase.collection(window.firebase.db, `users/${userId}/deadlines`),
-                window.firebase.orderBy('createdAt', 'desc')
-            );
-            
-            const unsubscribeDeadlines = window.firebase.onSnapshot(deadlinesQuery, (snapshot) => {
-                deadlineTasks = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
-                    updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
-                }));
-                renderTasks();
-                renderCalendar();
-            }, (error) => {
-                console.error('Error listening to deadlines:', error);
-                showSyncIndicator('error', 'Errore sincronizzazione');
-            });
-            dataListeners.push(unsubscribeDeadlines);
-
-            // Listen to completed tasks
-            const completedQuery = window.firebase.query(
-                window.firebase.collection(window.firebase.db, `users/${userId}/completed`),
-                window.firebase.orderBy('completedAt', 'desc')
-            );
-            
-            const unsubscribeCompleted = window.firebase.onSnapshot(completedQuery, (snapshot) => {
-                completedTasks = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
-                    completedAt: doc.data().completedAt?.toDate?.()?.toISOString() || doc.data().completedAt,
-                    noteDate: doc.data().noteDate?.toDate?.()?.toISOString() || doc.data().noteDate
-                }));
-                renderHistory();
-            }, (error) => {
-                console.error('Error listening to completed:', error);
-                showSyncIndicator('error', 'Errore sincronizzazione');
-            });
-            dataListeners.push(unsubscribeCompleted);
-
-            // Listen to notes
-            const notesQuery = window.firebase.query(
-                window.firebase.collection(window.firebase.db, `users/${userId}/notes`),
-                window.firebase.orderBy('date', 'desc')
-            );
-            
-            const unsubscribeNotes = window.firebase.onSnapshot(notesQuery, (snapshot) => {
-                notes = snapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data(),
-                    date: doc.data().date?.toDate?.()?.toISOString() || doc.data().date
-                }));
-                renderNotes();
-            }, (error) => {
-                console.error('Error listening to notes:', error);
-                showSyncIndicator('error', 'Errore sincronizzazione');
-            });
-            dataListeners.push(unsubscribeNotes);
-        }
-
-        async function saveToFirebase(collection, data, docId = null) {
-            if (!currentUser) return;
-
-            try {
-                showSyncIndicator('syncing', 'Sincronizzazione...');
-                
-                const userId = currentUser.uid;
-                const collectionRef = window.firebase.collection(window.firebase.db, `users/${userId}/${collection}`);
-                
-                if (docId) {
-                    await window.firebase.updateDoc(window.firebase.doc(window.firebase.db, `users/${userId}/${collection}`, docId), {
-                        ...data,
-                        updatedAt: window.firebase.serverTimestamp()
-                    });
-                } else {
-                    await window.firebase.addDoc(collectionRef, {
-                        ...data,
-                        createdAt: window.firebase.serverTimestamp()
-                    });
-                }
-                
-                showSyncIndicator('success', 'Sincronizzato');
-            } catch (error) {
-                console.error('Error saving to Firebase:', error);
-                showSyncIndicator('error', 'Errore salvataggio');
-                throw error;
-            }
-        }
-
-        async function deleteFromFirebase(collection, docId) {
-            if (!currentUser) return;
-
-            try {
-                showSyncIndicator('syncing', 'Eliminazione...');
-                
-                const userId = currentUser.uid;
-                await window.firebase.deleteDoc(window.firebase.doc(window.firebase.db, `users/${userId}/${collection}`, docId));
-                
-                showSyncIndicator('success', 'Eliminato');
-            } catch (error) {
-                console.error('Error deleting from Firebase:', error);
-                showSyncIndicator('error', 'Errore eliminazione');
-                throw error;
-            }
-        }
-
-        // Utility functions (same as before)
-        function formatDate(date) {
-            return new Date(date).toLocaleDateString('it-IT');
-        }
-
-        function formatDateTime(date) {
-            return new Date(date).toLocaleDateString('it-IT', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        function getDaysUntilDeadline(deadlineDate) {
-            const today = new Date();
-            const deadline = new Date(deadlineDate);
-            const diffTime = deadline - today;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
-        }
-
-        function showSuccessMessage(message) {
-            const successDiv = document.createElement('div');
-            successDiv.className = 'success-message';
-            successDiv.textContent = message;
-            document.querySelector('.content').prepend(successDiv);
-            setTimeout(() => successDiv.remove(), 3000);
-        }
-
-        function showTab(tabName, tabElement) {
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.remove('active'));
-            
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            
-            document.getElementById(tabName).classList.add('active');
-            tabElement.classList.add('active');
-            
-            setTimeout(() => {
-                if (tabName === 'calendar') {
-                    renderCalendar();
-                } else if (tabName === 'tasks') {
-                    renderTasks();
-                } else if (tabName === 'history') {
-                    renderHistory();
-                } else if (tabName === 'notes') {
-                    renderNotes();
-                }
-            }, 50);
-        }
-
-        // Tasks subtab system
-        function showTasksSubtab(subtabName, subtabElement) {
-            currentTasksSubtab = subtabName;
-            
-            const subtabs = document.querySelectorAll('.tasks-subtab');
-            subtabs.forEach(subtab => subtab.classList.remove('active'));
-            
-            const contents = document.querySelectorAll('.tasks-content');
-            contents.forEach(content => content.classList.remove('active'));
-            
-            subtabElement.classList.add('active');
-            document.getElementById(subtabName + '-content').classList.add('active');
-            
-            renderTasks();
-        }
-
-        // Calendar functions
-        function changeMonth(direction) {
-            currentDate.setMonth(currentDate.getMonth() + direction);
-            renderCalendar();
-        }
-
-        function renderCalendar() {
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
-            
-            const monthNames = [
-                'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
-                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
-            ];
-            document.getElementById('calendar-title').textContent = `${monthNames[month]} ${year}`;
-            
-            const firstDay = new Date(year, month, 1);
-            const startDate = new Date(firstDay);
-            const dayOfWeek = firstDay.getDay();
-            const startOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
-            startDate.setDate(startDate.getDate() - startOffset);
-            
-            const grid = document.getElementById('calendar-grid');
-            grid.innerHTML = '';
-            
-            const dayHeaders = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
-            dayHeaders.forEach(day => {
-                const headerEl = document.createElement('div');
-                headerEl.className = 'calendar-day-header';
-                headerEl.textContent = day;
-                grid.appendChild(headerEl);
-            });
-            
-            const today = new Date();
-            const currentDay = new Date(startDate);
-            
-            for (let i = 0; i < 42; i++) {
-                const dayEl = document.createElement('div');
-                dayEl.className = 'calendar-day';
-                
-                const isCurrentMonth = currentDay.getMonth() === month;
-                const isToday = currentDay.toDateString() === today.toDateString();
-                
-                if (!isCurrentMonth) {
-                    dayEl.classList.add('other-month');
-                }
-                
-                if (isToday) {
-                    dayEl.classList.add('today');
-                }
-                
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'day-number';
-                dayNumber.textContent = currentDay.getDate();
-                dayEl.appendChild(dayNumber);
-                
-                const tasksContainer = document.createElement('div');
-                tasksContainer.className = 'day-tasks';
-                
-                if (isCurrentMonth) {
-                    if (isToday) {
-                        todos.filter(todo => !todo.completed).forEach(() => {
-                            const taskDot = document.createElement('div');
-                            taskDot.className = 'task-dot todo';
-                            tasksContainer.appendChild(taskDot);
-                        });
-                    }
-                    
-                    deadlineTasks.filter(task => !task.completed).forEach(task => {
-                        const taskDate = new Date(task.dueDate);
-                        if (taskDate.toDateString() === currentDay.toDateString()) {
-                            const taskDot = document.createElement('div');
-                            taskDot.className = 'task-dot deadline';
-                            tasksContainer.appendChild(taskDot);
-                        }
-                    });
-                }
-                
-                dayEl.appendChild(tasksContainer);
-                
-                const dayDate = new Date(currentDay);
-                dayEl.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    showDayPopup(dayDate, dayEl);
-                });
-                
-                grid.appendChild(dayEl);
-                currentDay.setDate(currentDay.getDate() + 1);
-            }
-        }
-
-        // Day popup functions
-        function showDayPopup(date, dayElement) {
-            const popup = document.getElementById('day-popup');
-            const dateHeader = document.getElementById('day-popup-date');
-            const content = document.getElementById('day-popup-content');
-            
-            dateHeader.textContent = date.toLocaleDateString('it-IT', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            
-            const { todoTasks, deadlineTasks: deadlineTasksForDay } = getTasksForDate(date);
-            let contentHtml = '';
-            
-            if (todoTasks.length > 0) {
-                contentHtml += `
-                    <div class="day-popup-section">
-                        <div class="day-popup-section-title">
-                            ⏰ Attività da fare
-                        </div>
-                        ${todoTasks.map(task => `
-                            <div class="day-popup-task todo" onclick="showTaskDetailPopup('${task.id}', 'todo', event)">
-                                <div class="day-popup-task-content">
-                                    <div class="day-popup-task-title">${task.title}</div>
-                                </div>
-                                <div class="day-popup-task-actions" onclick="event.stopPropagation()">
-                                    <button class="day-popup-action-btn complete" onclick="completeTodoTask('${task.id}')" title="Completa">
-                                        ✓
-                                    </button>
-                                    <button class="day-popup-action-btn edit" onclick="editTodoTask('${task.id}')" title="Modifica">
-                                        ✏️
-                                    </button>
-                                    <button class="day-popup-action-btn delete" onclick="deleteTodoTask('${task.id}')" title="Elimina">
-                                        🗑️
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            if (deadlineTasksForDay.length > 0) {
-                contentHtml += `
-                    <div class="day-popup-section">
-                        <div class="day-popup-section-title">
-                            📅 Scadenze
-                        </div>
-                        ${deadlineTasksForDay.map(task => `
-                            <div class="day-popup-task deadline" onclick="showTaskDetailPopup('${task.id}', 'deadline', event)">
-                                <div class="day-popup-task-content">
-                                    <div class="day-popup-task-title">${task.title}</div>
-                                </div>
-                                <div class="day-popup-task-actions" onclick="event.stopPropagation()">
-                                    <button class="day-popup-action-btn complete" onclick="completeDeadlineTask('${task.id}')" title="Completa">
-                                        ✓
-                                    </button>
-                                    <button class="day-popup-action-btn edit" onclick="editDeadlineTask('${task.id}')" title="Modifica">
-                                        ✏️
-                                    </button>
-                                    <button class="day-popup-action-btn delete" onclick="deleteDeadlineTask('${task.id}')" title="Elimina">
-                                        🗑️
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            }
-            
-            if (todoTasks.length === 0 && deadlineTasksForDay.length === 0) {
-                contentHtml = '<div class="empty-day">📅 Nessuna attività programmata per questo giorno</div>';
-            }
-            
-            content.innerHTML = contentHtml;
-            
-            const rect = dayElement.getBoundingClientRect();
-            
-            let left = rect.left + (rect.width / 2) - 150;
-            let top = rect.bottom + 10;
-            
-            if (left < 10) left = 10;
-            if (left + 300 > window.innerWidth - 10) left = window.innerWidth - 310;
-            if (top + 200 > window.innerHeight - 10) top = rect.top - 220;
-            
-            popup.style.left = left + 'px';
-            popup.style.top = top + 'px';
-            popup.classList.add('show');
-            
-            setTimeout(() => {
-                document.addEventListener('click', closeDayPopupOnClick);
-            }, 100);
-        }
-
-        function getTasksForDate(date) {
-            const today = new Date();
-            const isToday = date.toDateString() === today.toDateString();
-            
-            let todoTasksForDay = [];
-            let deadlineTasksForDay = [];
-            
-            if (isToday) {
-                todoTasksForDay = todos.filter(todo => !todo.completed);
-            }
-            
-            deadlineTasksForDay = deadlineTasks.filter(task => {
-                if (task.completed) return false;
-                const taskDate = new Date(task.dueDate);
-                return taskDate.toDateString() === date.toDateString();
-            });
-            
-            return { todoTasks: todoTasksForDay, deadlineTasks: deadlineTasksForDay };
-        }
-
-        function closeDayPopup() {
-            const popup = document.getElementById('day-popup');
-            popup.classList.remove('show');
-            document.removeEventListener('click', closeDayPopupOnClick);
-        }
-
-        function closeDayPopupOnClick(event) {
-            const popup = document.getElementById('day-popup');
-            if (!popup.contains(event.target)) {
-                closeDayPopup();
-            }
-        }
-
-        // Task detail popup functions
-        function showTaskDetailPopup(taskId, taskType, event) {
-            event.stopPropagation();
-            
-            const popup = document.getElementById('task-detail-popup');
-            const title = document.getElementById('task-detail-title');
-            const description = document.getElementById('task-detail-description');
-            const meta = document.getElementById('task-detail-meta');
-            const actions = document.getElementById('task-detail-actions');
-            
-            let task;
-            if (taskType === 'todo') {
-                task = todos.find(t => t.id === taskId);
-            } else {
-                task = deadlineTasks.find(t => t.id === taskId);
-            }
-            
-            if (!task) return;
-            
-            title.textContent = task.title;
-            description.textContent = task.description;
-            
-            let metaHtml = `<div class="task-detail-meta-item"><strong>Creata:</strong> ${formatDateTime(task.createdAt)}</div>`;
-            
-            if (taskType === 'deadline') {
-                metaHtml += `<div class="task-detail-meta-item"><strong>Inizio:</strong> ${formatDate(task.startDate)}</div>`;
-                metaHtml += `<div class="task-detail-meta-item"><strong>Scadenza:</strong> ${formatDate(task.dueDate)}</div>`;
-                
-                const daysUntil = getDaysUntilDeadline(task.dueDate);
-                let statusText = '';
-                if (daysUntil < 0) {
-                    statusText = `Scaduta ${Math.abs(daysUntil)} giorni fa`;
-                } else if (daysUntil === 0) {
-                    statusText = 'Scade oggi!';
-                } else {
-                    statusText = `Scade in ${daysUntil} giorni`;
-                }
-                metaHtml += `<div class="task-detail-meta-item"><strong>Stato:</strong> ${statusText}</div>`;
-            }
-            
-            meta.innerHTML = metaHtml;
-            
-            const completeAction = taskType === 'todo' ? `completeTodoTask('${taskId}')` : `completeDeadlineTask('${taskId}')`;
-            const editAction = taskType === 'todo' ? `editTodoTask('${taskId}')` : `editDeadlineTask('${taskId}')`;
-            const deleteAction = taskType === 'todo' ? `deleteTodoTask('${taskId}')` : `deleteDeadlineTask('${taskId}')`;
-            
-            actions.innerHTML = `
-                <button class="task-detail-btn complete" onclick="${completeAction}">
-                    ✓ Completa
-                </button>
-                <button class="task-detail-btn edit" onclick="${editAction}">
-                    ✏️ Modifica
-                </button>
-                <button class="task-detail-btn delete" onclick="${deleteAction}">
-                    🗑️ Elimina
-                </button>
-            `;
-            
-            popup.classList.add('show');
-        }
-
-        function closeTaskDetailPopup() {
-            const popup = document.getElementById('task-detail-popup');
-            popup.classList.remove('show');
-        }
-
-        // Task management functions
-        function renderTasks() {
-            if (currentTasksSubtab === 'todo') {
-                renderTodoTasks();
-            } else {
-                renderDeadlineTasks();
-            }
-        }
-
-        function renderTodoTasks() {
-            const container = document.getElementById('todo-tasks');
-            const activeTodos = todos.filter(todo => !todo.completed);
-            
-            if (activeTodos.length === 0) {
-                container.innerHTML = '<div class="empty-state">Nessuna attività da fare 🎉</div>';
-                return;
-            }
-            
-            container.innerHTML = activeTodos.map(todo => `
-                <div class="task-card todo">
-                    <div class="task-header">
-                        <div class="task-title">${todo.title}</div>
-                        <div class="task-header-buttons">
-                            <button class="task-header-btn complete" onclick="completeTodoTask('${todo.id}')" title="Completa">
-                                ✓
-                            </button>
-                            <button class="task-header-btn edit" onclick="editTodoTask('${todo.id}')" title="Modifica">
-                                ✏️
-                            </button>
-                            <button class="task-header-btn delete" onclick="deleteTodoTask('${todo.id}')" title="Elimina">
-                                🗑️
-                            </button>
-                        </div>
-                    </div>
-                    <div class="task-description-box ${!todo.description ? 'empty' : ''}">
-                        ${todo.description || 'Nessuna descrizione disponibile'}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderDeadlineTasks() {
-            const container = document.getElementById('deadline-tasks');
-            const activeDeadlines = deadlineTasks.filter(task => !task.completed);
-            
-            if (activeDeadlines.length === 0) {
-                container.innerHTML = '<div class="empty-state">Nessuna attività con scadenza 📅</div>';
-                return;
-            }
-            
-            activeDeadlines.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-            
-            container.innerHTML = activeDeadlines.map(task => {
-                const daysUntil = getDaysUntilDeadline(task.dueDate);
-                let statusClass = '';
-                let statusText = '';
-                
-                if (daysUntil < 0) {
-                    statusClass = 'overdue';
-                    statusText = `Scaduta ${Math.abs(daysUntil)} giorni fa`;
-                } else if (daysUntil === 0) {
-                    statusClass = 'deadline';
-                    statusText = 'Scade oggi!';
-                } else if (daysUntil <= 3) {
-                    statusClass = 'deadline';
-                    statusText = `Scade in ${daysUntil} giorni`;
-                } else {
-                    statusText = `Scade in ${daysUntil} giorni`;
-                }
-                
-                return `
-                    <div class="task-card deadline">
-                        <div class="task-header">
-                            <div class="task-title">${task.title}</div>
-                            <div class="task-header-buttons">
-                                <button class="task-header-btn complete" onclick="completeDeadlineTask('${task.id}')" title="Completa">
-                                    ✓
-                                </button>
-                                <button class="task-header-btn edit" onclick="editDeadlineTask('${task.id}')" title="Modifica">
-                                    ✏️
-                                </button>
-                                <button class="task-header-btn delete" onclick="deleteDeadlineTask('${task.id}')" title="Elimina">
-                                    🗑️
-                                </button>
-                            </div>
-                        </div>
-                        <div class="task-description-box ${!task.description ? 'empty' : ''}">
-                            ${task.description || 'Nessuna descrizione disponibile'}
-                        </div>
-                        <div class="task-dates">
-                            <div class="task-date">Inizio: ${formatDate(task.startDate)}</div>
-                            <div class="task-date ${statusClass}">Scadenza: ${formatDate(task.dueDate)}</div>
-                        </div>
-                        <div class="task-date ${statusClass}" style="font-weight: 600; margin-top: 8px;">${statusText}</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // Todo task functions
-        function openAddTodoModal() {
-            window.editingTodoId = null;
-            document.getElementById('todo-title').value = '';
-            document.getElementById('todo-description').value = '';
-            document.querySelector('#todo-modal h3').textContent = '⏰ Nuova Attività Da Fare';
-            document.querySelector('#todo-modal .btn:not(.btn-cancel)').textContent = '➕ Aggiungi';
-            document.getElementById('todo-modal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeTodoModal() {
-            document.getElementById('todo-modal').style.display = 'none';
-            document.body.style.overflow = '';
-            window.editingTodoId = null;
-        }
-
-        function closeTodoModalOnBackground(event) {
-            if (event.target === event.currentTarget) {
-                closeTodoModal();
-            }
-        }
-
-        async function saveTodoTask() {
-            const title = document.getElementById('todo-title').value.trim();
-            const description = document.getElementById('todo-description').value.trim();
-            
-            if (!title) {
-                alert('⚠️ Inserisci il titolo dell\'attività!');
-                return;
-            }
-            
-            try {
-                if (window.editingTodoId) {
-                    const todo = todos.find(t => t.id === window.editingTodoId);
-                    if (todo) {
-                        await saveToFirebase('todos', {
-                            title: title,
-                            description: description,
-                            completed: false
-                        }, window.editingTodoId);
-                    }
-                    showSuccessMessage('Attività modificata con successo!');
-                } else {
-                    await saveToFirebase('todos', {
-                        title: title,
-                        description: description,
-                        completed: false
-                    });
-                    showSuccessMessage('Attività aggiunta con successo!');
-                }
-                
-                closeTodoModal();
-                closeTaskDetailPopup();
-            } catch (error) {
-                alert('Errore durante il salvataggio');
-            }
-        }
-
-        function editTodoTask(id) {
-            const todo = todos.find(t => t.id === id);
-            if (!todo) return;
-            
-            document.getElementById('todo-title').value = todo.title;
-            document.getElementById('todo-description').value = todo.description;
-            window.editingTodoId = id;
-            document.querySelector('#todo-modal h3').textContent = '✏️ Modifica Attività Da Fare';
-            document.querySelector('#todo-modal .btn:not(.btn-cancel)').textContent = '💾 Salva Modifiche';
-            document.getElementById('todo-modal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        async function completeTodoTask(id) {
-            if (confirm('✅ Sei sicuro di aver completato questa attività?')) {
-                const todo = todos.find(t => t.id === id);
-                if (todo) {
-                    try {
-                        // Add to completed
-                        await saveToFirebase('completed', {
-                            ...todo,
-                            type: 'todo',
-                            completedAt: window.firebase.serverTimestamp()
-                        });
-                        
-                        // Delete from todos
-                        await deleteFromFirebase('todos', id);
-                        
-                        closeDayPopup();
-                        closeTaskDetailPopup();
-                        showSuccessMessage('Attività completata!');
-                    } catch (error) {
-                        alert('Errore durante il completamento');
-                    }
-                }
-            }
-        }
-
-        async function deleteTodoTask(id) {
-            if (confirm('🗑️ Sei sicuro di voler eliminare definitivamente questa attività?')) {
-                try {
-                    await deleteFromFirebase('todos', id);
-                    closeDayPopup();
-                    closeTaskDetailPopup();
-                    showSuccessMessage('Attività eliminata!');
-                } catch (error) {
-                    alert('Errore durante l\'eliminazione');
-                }
-            }
-        }
-
-        // Deadline task functions
-        function openAddDeadlineModal() {
-            window.editingDeadlineId = null;
-            document.getElementById('deadline-title').value = '';
-            document.getElementById('deadline-description').value = '';
-            document.getElementById('deadline-start-date').value = '';
-            document.getElementById('deadline-due-date').value = '';
-            document.querySelector('#deadline-modal h3').textContent = '📅 Nuova Attività Con Scadenza';
-            document.querySelector('#deadline-modal .btn:not(.btn-cancel)').textContent = '➕ Aggiungi';
-            document.getElementById('deadline-modal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeDeadlineModal() {
-            document.getElementById('deadline-modal').style.display = 'none';
-            document.body.style.overflow = '';
-            window.editingDeadlineId = null;
-        }
-
-        function closeDeadlineModalOnBackground(event) {
-            if (event.target === event.currentTarget) {
-                closeDeadlineModal();
-            }
-        }
-
-        async function saveDeadlineTask() {
-            const title = document.getElementById('deadline-title').value.trim();
-            const description = document.getElementById('deadline-description').value.trim();
-            const startDate = document.getElementById('deadline-start-date').value;
-            const dueDate = document.getElementById('deadline-due-date').value;
-            
-            if (!title) {
-                alert('⚠️ Inserisci il titolo dell\'attività!');
-                return;
-            }
-            
-            if (!startDate || !dueDate) {
-                alert('⚠️ Inserisci entrambe le date!');
-                return;
-            }
-            
-            if (new Date(startDate) > new Date(dueDate)) {
-                alert('⚠️ La data di inizio non può essere successiva alla scadenza!');
-                return;
-            }
-            
-            try {
-                if (window.editingDeadlineId) {
-                    await saveToFirebase('deadlines', {
-                        title: title,
-                        description: description,
-                        startDate: startDate,
-                        dueDate: dueDate,
-                        completed: false
-                    }, window.editingDeadlineId);
-                    showSuccessMessage('Attività modificata con successo!');
-                } else {
-                    await saveToFirebase('deadlines', {
-                        title: title,
-                        description: description,
-                        startDate: startDate,
-                        dueDate: dueDate,
-                        completed: false
-                    });
-                    showSuccessMessage('Attività aggiunta con successo!');
-                }
-                
-                closeDeadlineModal();
-                closeTaskDetailPopup();
-            } catch (error) {
-                alert('Errore durante il salvataggio');
-            }
-        }
-
-        function editDeadlineTask(id) {
-            const task = deadlineTasks.find(t => t.id === id);
-            if (!task) return;
-            
-            document.getElementById('deadline-title').value = task.title;
-            document.getElementById('deadline-description').value = task.description;
-            document.getElementById('deadline-start-date').value = task.startDate;
-            document.getElementById('deadline-due-date').value = task.dueDate;
-            window.editingDeadlineId = id;
-            document.querySelector('#deadline-modal h3').textContent = '✏️ Modifica Attività Con Scadenza';
-            document.querySelector('#deadline-modal .btn:not(.btn-cancel)').textContent = '💾 Salva Modifiche';
-            document.getElementById('deadline-modal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
-
-        async function completeDeadlineTask(id) {
-            if (confirm('✅ Sei sicuro di aver completato questa attività?')) {
-                const task = deadlineTasks.find(t => t.id === id);
-                if (task) {
-                    try {
-                        // Add to completed
-                        await saveToFirebase('completed', {
-                            ...task,
-                            type: 'deadline',
-                            completedAt: window.firebase.serverTimestamp()
-                        });
-                        
-                        // Delete from deadlines
-                        await deleteFromFirebase('deadlines', id);
-                        
-                        closeDayPopup();
-                        closeTaskDetailPopup();
-                        showSuccessMessage('Attività completata!');
-                    } catch (error) {
-                        alert('Errore durante il completamento');
-                    }
-                }
-            }
-        }
-
-        async function deleteDeadlineTask(id) {
-            if (confirm('🗑️ Sei sicuro di voler eliminare definitivamente questa attività?')) {
-                try {
-                    await deleteFromFirebase('deadlines', id);
-                    closeDayPopup();
-                    closeTaskDetailPopup();
-                    showSuccessMessage('Attività eliminata!');
-                } catch (error) {
-                    alert('Errore durante l\'eliminazione');
-                }
-            }
-        }
-
-        // History functions with notes system
-        function renderHistory() {
-            const container = document.getElementById('history-list');
-            
-            if (completedTasks.length === 0) {
-                container.innerHTML = '<div class="empty-state">Nessuna attività completata ancora.<br>Completa la prima attività! 🎯</div>';
-                return;
-            }
-            
-            const sortedTasks = [...completedTasks].sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
-            
-            container.innerHTML = sortedTasks.map(task => `
-                <div class="history-item">
-                    <div class="history-item-header">
-                        <div class="history-item-info">
-                            <div class="history-date">
-                                Completata il ${formatDate(task.completedAt)}
-                                ${task.type === 'deadline' ? '📅' : '⏰'}
-                            </div>
-                            <div class="history-task-name">${task.title}</div>
-                            <div class="history-task-description">${task.description}</div>
-                            ${task.type === 'deadline' ? `
-                                <div style="font-size: 0.8rem; color: #6b7280; margin-top: 5px;">
-                                    Scadenza era: ${formatDate(task.dueDate)}
-                                </div>
-                            ` : ''}
-                        </div>
-                        <button class="history-note-btn ${task.note ? 'has-note' : ''}" onclick="openHistoryNoteModal('${task.id}')">
-                            ${task.note ? '✏️ Modifica Nota' : '📝 Aggiungi Nota'}
-                        </button>
-                    </div>
-                    ${task.note ? `
-                        <div class="history-note">
-                            <div class="history-note-actions">
-                                <button class="history-note-action" onclick="openHistoryNoteModal('${task.id}')" title="Modifica nota">
-                                    ✏️
-                                </button>
-                                <button class="history-note-action delete" onclick="deleteHistoryNote('${task.id}')" title="Elimina nota">
-                                    🗑️
-                                </button>
-                            </div>
-                            <div class="history-note-content">${task.note}</div>
-                            <div class="history-note-date">Nota aggiunta il ${formatDate(task.noteDate)}</div>
-                        </div>
-                    ` : ''}
-                </div>
-            `).join('');
-        }
-
-        // History notes functions
-        function openHistoryNoteModal(taskId) {
-            const task = completedTasks.find(t => t.id === taskId);
-            if (!task) return;
-            
-            editingHistoryNoteTaskId = taskId;
-            
-            const modal = document.getElementById('history-note-modal');
-            const title = document.getElementById('history-note-modal-title');
-            const textarea = document.getElementById('history-note-text');
-            const saveBtn = document.getElementById('history-note-save-btn');
-            
-            if (task.note) {
-                title.textContent = '✏️ Modifica Nota';
-                textarea.value = task.note;
-                saveBtn.textContent = '💾 Salva Modifiche';
-            } else {
-                title.textContent = '📝 Aggiungi Nota';
-                textarea.value = '';
-                saveBtn.textContent = '💾 Salva Nota';
-            }
-            
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => textarea.focus(), 100);
-        }
-
-        function closeHistoryNoteModal() {
-            document.getElementById('history-note-modal').style.display = 'none';
-            document.body.style.overflow = '';
-            editingHistoryNoteTaskId = null;
-        }
-
-        function closeHistoryNoteModalOnBackground(event) {
-            if (event.target === event.currentTarget) {
-                closeHistoryNoteModal();
-            }
-        }
-
-        async function saveHistoryNote() {
-            const noteText = document.getElementById('history-note-text').value.trim();
-            
-            if (!noteText) {
-                alert('⚠️ Inserisci il testo della nota!');
-                return;
-            }
-            
-            const task = completedTasks.find(t => t.id === editingHistoryNoteTaskId);
-            if (task) {
-                try {
-                    const isNewNote = !task.note;
-                    await saveToFirebase('completed', {
-                        ...task,
-                        note: noteText,
-                        noteDate: isNewNote ? window.firebase.serverTimestamp() : (task.noteDate || window.firebase.serverTimestamp())
-                    }, editingHistoryNoteTaskId);
-                    
-                    closeHistoryNoteModal();
-                    showSuccessMessage(isNewNote ? 'Nota aggiunta!' : 'Nota modificata!');
-                } catch (error) {
-                    alert('Errore durante il salvataggio della nota');
-                }
-            }
-        }
-
-        async function deleteHistoryNote(taskId) {
-            if (confirm('🗑️ Sei sicuro di voler eliminare questa nota?')) {
-                const task = completedTasks.find(t => t.id === taskId);
-                if (task) {
-                    try {
-                        const updatedTask = { ...task };
-                        delete updatedTask.note;
-                        delete updatedTask.noteDate;
-                        
-                        await saveToFirebase('completed', updatedTask, taskId);
-                        showSuccessMessage('Nota eliminata!');
-                    } catch (error) {
-                        alert('Errore durante l\'eliminazione della nota');
-                    }
-                }
-            }
-        }
-
-        // Notes functions with edit and delete functionality
-        async function saveNote() {
-            const noteText = document.getElementById('notes-text').value.trim();
-            if (!noteText) {
-                alert('⚠️ Scrivi qualcosa prima di salvare!');
-                return;
-            }
-            
-            try {
-                await saveToFirebase('notes', {
-                    text: noteText,
-                    date: window.firebase.serverTimestamp()
-                });
-                
-                document.getElementById('notes-text').value = '';
-                showSuccessMessage('Nota salvata!');
-            } catch (error) {
-                alert('Errore durante il salvataggio della nota');
-            }
-        }
-
-        function renderNotes() {
-            const container = document.getElementById('saved-notes');
-            
-            if (notes.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-            
-            container.innerHTML = '<h4 class="section-title">📋 Note Salvate</h4>' + 
-                notes.map(note => `
-                    <div class="notes-item">
-                        <div class="notes-actions">
-                            <button class="notes-action-btn edit" onclick="editNote('${note.id}')" title="Modifica nota">
-                                ✏️
-                            </button>
-                            <button class="notes-action-btn delete" onclick="deleteNote('${note.id}')" title="Elimina nota">
-                                🗑️
-                            </button>
-                        </div>
-                        <div class="notes-date">
-                            ${formatDateTime(note.date)}
-                        </div>
-                        <div class="notes-text">${note.text}</div>
-                    </div>
-                `).join('');
-        }
-
-        function editNote(noteId) {
-            const note = notes.find(n => n.id === noteId);
-            if (!note) return;
-            
-            editingNoteId = noteId;
-            document.getElementById('edit-note-text').value = note.text;
-            document.getElementById('edit-note-modal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => document.getElementById('edit-note-text').focus(), 100);
-        }
-
-        function closeEditNoteModal() {
-            document.getElementById('edit-note-modal').style.display = 'none';
-            document.body.style.overflow = '';
-            editingNoteId = null;
-        }
-
-        function closeEditNoteModalOnBackground(event) {
-            if (event.target === event.currentTarget) {
-                closeEditNoteModal();
-            }
-        }
-
-        async function saveEditedNote() {
-            const noteText = document.getElementById('edit-note-text').value.trim();
-            
-            if (!noteText) {
-                alert('⚠️ Inserisci il testo della nota!');
-                return;
-            }
-            
-            const note = notes.find(n => n.id === editingNoteId);
-            if (note) {
-                try {
-                    await saveToFirebase('notes', {
-                        text: noteText,
-                        date: firebase.firestore.FieldValue.serverTimestamp()
-                    }, editingNoteId);
-                    
-                    closeEditNoteModal();
-                    showSuccessMessage('Nota modificata!');
-                } catch (error) {
-                    alert('Errore durante la modifica della nota');
-                }
-            }
-        }
-
-        async function deleteNote(noteId) {
-            if (confirm('🗑️ Sei sicuro di voler eliminare questa nota?')) {
-                try {
-                    await deleteFromFirebase('notes', noteId);
-                    showSuccessMessage('Nota eliminata!');
-                } catch (error) {
-                    alert('Errore durante l\'eliminazione della nota');
-                }
-            }
-        }
-
-        // PDF Export functions (keeping the same logic as before)
-        function exportTasks(taskType) {
-            const button = event?.target || document.querySelector('.export-btn');
-            const originalText = button.innerHTML;
-            button.innerHTML = '⏳ Generando...';
-            button.disabled = true;
-            
-            setTimeout(() => {
-                try {
-                    const { jsPDF } = window.jspdf || {};
-                    if (!jsPDF) {
-                        exportTasksAsText(taskType);
-                        return;
-                    }
-                    
-                    const doc = new jsPDF();
-                    const pageWidth = doc.internal.pageSize.width;
-                    const margin = 20;
-                    let yPosition = margin;
-                    
-                    // Header
-                    doc.setFontSize(18);
-                    doc.setFont(undefined, 'bold');
-                    const title = taskType === 'todo' ? 'Attività Da Fare' : 'Attività Con Scadenza';
-                    doc.text(title, margin, yPosition);
-                    yPosition += 15;
-                    
-                    doc.setFontSize(10);
-                    doc.setFont(undefined, 'normal');
-                    doc.text(`Generato il: ${new Date().toLocaleString('it-IT')}`, margin, yPosition);
-                    yPosition += 20;
-                    
-                    const tasksToExport = taskType === 'todo' 
-                        ? todos.filter(todo => !todo.completed) 
-                        : deadlineTasks.filter(task => !task.completed);
-                    
-                    if (tasksToExport.length === 0) {
-                        doc.text('Nessuna attività presente.', margin, yPosition);
-                    } else {
-                        tasksToExport.forEach((task, index) => {
-                            if (yPosition > 250) {
-                                doc.addPage();
-                                yPosition = margin;
-                            }
-                            
-                            doc.setFontSize(12);
-                            doc.setFont(undefined, 'bold');
-                            doc.text(`${index + 1}. ${task.title}`, margin, yPosition);
-                            yPosition += 8;
-                            
-                            doc.setFontSize(10);
-                            doc.setFont(undefined, 'normal');
-                            if (task.description) {
-                                const lines = doc.splitTextToSize(task.description, pageWidth - 2 * margin);
-                                doc.text(lines, margin + 5, yPosition);
-                                yPosition += lines.length * 5;
-                            }
-                            
-                            if (taskType === 'deadline') {
-                                yPosition += 3;
-                                doc.text(`Inizio: ${formatDate(task.startDate)}`, margin + 5, yPosition);
-                                yPosition += 5;
-                                doc.text(`Scadenza: ${formatDate(task.dueDate)}`, margin + 5, yPosition);
-                                yPosition += 5;
-                                
-                                const daysUntil = getDaysUntilDeadline(task.dueDate);
-                                let status = '';
-                                if (daysUntil < 0) {
-                                    status = `Scaduta ${Math.abs(daysUntil)} giorni fa`;
-                                } else if (daysUntil === 0) {
-                                    status = 'Scade oggi!';
-                                } else {
-                                    status = `Scade in ${daysUntil} giorni`;
-                                }
-                                doc.text(`Stato: ${status}`, margin + 5, yPosition);
-                                yPosition += 5;
-                            }
-                            
-                            yPosition += 3;
-                            doc.setFontSize(8);
-                            doc.text(`Creata: ${formatDateTime(task.createdAt)}`, margin + 5, yPosition);
-                            yPosition += 15;
-                        });
-                    }
-                    
-                    doc.save(`OfficeFlow_${title.replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
-                    showSuccessMessage('PDF generato con successo!');
-                    
-                } catch (error) {
-                    console.error('Errore generazione PDF:', error);
-                    exportTasksAsText(taskType);
-                } finally {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }
-            }, 500);
-        }
-
-        function exportTasksAsText(taskType) {
-            const title = taskType === 'todo' ? 'Attività Da Fare' : 'Attività Con Scadenza';
-            const tasksToExport = taskType === 'todo' 
-                ? todos.filter(todo => !todo.completed) 
-                : deadlineTasks.filter(task => !task.completed);
-            
-            let content = `${title}\n`;
-            content += `Generato il: ${new Date().toLocaleString('it-IT')}\n`;
-            content += '='.repeat(50) + '\n\n';
-            
-            if (tasksToExport.length === 0) {
-                content += 'Nessuna attività presente.\n';
-            } else {
-                tasksToExport.forEach((task, index) => {
-                    content += `${index + 1}. ${task.title}\n`;
-                    content += `   Descrizione: ${task.description}\n`;
-                    
-                    if (taskType === 'deadline') {
-                        content += `   Inizio: ${formatDate(task.startDate)}\n`;
-                        content += `   Scadenza: ${formatDate(task.dueDate)}\n`;
-                        
-                        const daysUntil = getDaysUntilDeadline(task.dueDate);
-                        let status = '';
-                        if (daysUntil < 0) {
-                            status = `Scaduta ${Math.abs(daysUntil)} giorni fa`;
-                        } else if (daysUntil === 0) {
-                            status = 'Scade oggi!';
-                        } else {
-                            status = `Scade in ${daysUntil} giorni`;
-                        }
-                        content += `   Stato: ${status}\n`;
-                    }
-                    
-                    content += `   Creata: ${formatDateTime(task.createdAt)}\n`;
-                    content += '\n';
-                });
-            }
-            
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `OfficeFlow_${title.replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.txt`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            
-            showSuccessMessage('File di testo generato con successo!');
-        }
-
-        function exportHistory() {
-            const button = event.target;
-            const originalText = button.innerHTML;
-            button.innerHTML = '⏳ Generando...';
-            button.disabled = true;
-            
-            setTimeout(() => {
-                try {
-                    const { jsPDF } = window.jspdf || {};
-                    if (!jsPDF) {
-                        exportHistoryAsText();
-                        return;
-                    }
-                    
-                    const doc = new jsPDF();
-                    const pageWidth = doc.internal.pageSize.width;
-                    const margin = 20;
-                    let yPosition = margin;
-                    
-                    doc.setFontSize(18);
-                    doc.setFont(undefined, 'bold');
-                    doc.text('Cronologia Attività Completate', margin, yPosition);
-                    yPosition += 15;
-                    
-                    doc.setFontSize(10);
-                    doc.setFont(undefined, 'normal');
-                    doc.text(`Generato il: ${new Date().toLocaleString('it-IT')}`, margin, yPosition);
-                    yPosition += 20;
-                    
-                    const sortedTasks = [...completedTasks].sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
-                    
-                    if (sortedTasks.length === 0) {
-                        doc.text('Nessuna attività completata.', margin, yPosition);
-                    } else {
-                        sortedTasks.forEach((task, index) => {
-                            if (yPosition > 220) {
-                                doc.addPage();
-                                yPosition = margin;
-                            }
-                            
-                            doc.setFontSize(12);
-                            doc.setFont(undefined, 'bold');
-                            doc.text(`${index + 1}. ${task.title}`, margin, yPosition);
-                            yPosition += 8;
-                            
-                            doc.setFontSize(10);
-                            doc.setFont(undefined, 'normal');
-                            if (task.description) {
-                                const lines = doc.splitTextToSize(task.description, pageWidth - 2 * margin);
-                                doc.text(lines, margin + 5, yPosition);
-                                yPosition += lines.length * 5;
-                            }
-                            
-                            yPosition += 3;
-                            doc.text(`Completata il: ${formatDate(task.completedAt)}`, margin + 5, yPosition);
-                            yPosition += 5;
-                            
-                            if (task.type === 'deadline') {
-                                doc.text(`Scadenza era: ${formatDate(task.dueDate)}`, margin + 5, yPosition);
-                                yPosition += 5;
-                            }
-                            
-                            if (task.note) {
-                                yPosition += 3;
-                                doc.setFont(undefined, 'bold');
-                                doc.text('Nota:', margin + 5, yPosition);
-                                yPosition += 5;
-                                doc.setFont(undefined, 'normal');
-                                const noteLines = doc.splitTextToSize(task.note, pageWidth - 2 * margin - 10);
-                                doc.text(noteLines, margin + 10, yPosition);
-                                yPosition += noteLines.length * 5;
-                                doc.setFontSize(8);
-                                doc.text(`Nota aggiunta il: ${formatDate(task.noteDate)}`, margin + 10, yPosition);
-                                yPosition += 5;
-                                doc.setFontSize(10);
-                            }
-                            
-                            yPosition += 15;
-                        });
-                    }
-                    
-                    doc.save(`OfficeFlow_Cronologia_${new Date().toISOString().split('T')[0]}.pdf`);
-                    showSuccessMessage('PDF cronologia generato con successo!');
-                    
-                } catch (error) {
-                    exportHistoryAsText();
-                } finally {
-                    button.innerHTML = originalText;
-                    button.disabled = false;
-                }
-            }, 500);
-        }
-
-        function exportHistoryAsText() {
-            let content = 'Cronologia Attività Completate\n';
-            content += `Generato il: ${new Date().toLocaleString('it-IT')}\n`;
-            content += '='.repeat(50) + '\n\n';
-            
-            const sortedTasks = [...completedTasks].sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
-            
-            if (sortedTasks.length === 0) {
-                content += 'Nessuna attività completata.\n';
-            } else {
-                sortedTasks.forEach((task, index) => {
-                    const taskType = task.type === 'deadline' ? '📅' : '⏰';
-                    content += `${index + 1}. ${taskType} ${task.title}\n`;
-                    content += `   Descrizione: ${task.description}\n`;
-                    content += `   Completata il: ${formatDate(task.completedAt)}\n`;
-                    
-                    if (task.type === 'deadline') {
-                        content += `   Scadenza era: ${formatDate(task.dueDate)}\n`;
-                    }
-                    
-                    if (task.note) {
-                        content += `   Nota: ${task.note}\n`;
-                        content += `   Nota aggiunta il: ${formatDate(task.noteDate)}\n`;
-                    }
-                    
-                    content += '\n';
-                });
-            }
-            
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `OfficeFlow_Cronologia_${new Date().toISOString().split('T')[0]}.txt`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            
-            showSuccessMessage('File cronologia generato con successo!');
-        }
-
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔋 Initializing OfficeFlow with Firebase...');
-            
-            // Load jsPDF for PDF export functionality
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-            script.onload = function() {
-                console.log('📄 jsPDF loaded successfully');
-            };
-            script.onerror = function() {
-                console.warn('📄 jsPDF failed to load - will use text export fallback');
-            };
-            document.head.appendChild(script);
-
-            // Setup Firebase authentication listener
-            window.firebase.onAuthStateChanged(window.firebase.auth, (user) => {
-                if (user) {
-                    console.log('👤 User signed in:', user.email);
-                    currentUser = user;
-                    
-                    // Show main app
-                    document.getElementById('auth-container').style.display = 'none';
-                    document.getElementById('main-app').style.display = 'block';
-                    document.getElementById('user-email').textContent = user.email;
-                    
-                    // Setup data listeners
-                    setupDataListeners();
-                    
-                    // Initialize UI
-                    renderCalendar();
-                } else {
-                    console.log('👤 User signed out');
-                    currentUser = null;
-                    
-                    // Clear data listeners
-                    dataListeners.forEach(unsubscribe => unsubscribe());
-                    dataListeners = [];
-                    
-                    // Clear local data
-                    todos = [];
-                    deadlineTasks = [];
-                    completedTasks = [];
-                    notes = [];
-                    
-                    // Show auth screen
-                    document.getElementById('main-app').style.display = 'none';
-                    document.getElementById('auth-container').style.display = 'flex';
-                }
-            });
-            
-            console.log('🚀 OfficeFlow initialized successfully!');
-        });
-
-        // Event listeners for closing popups on outside click
-        document.addEventListener('click', function(event) {
-            const taskDetailPopup = document.getElementById('task-detail-popup');
-            if (taskDetailPopup.classList.contains('show') && event.target === taskDetailPopup) {
-                closeTaskDetailPopup();
-            }
-        });
-
-        // Keyboard shortcuts for login
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                const activeTab = document.querySelector('.auth-tab.active');
-                if (activeTab && activeTab.textContent.includes('Accedi')) {
-                    const loginBtn = document.getElementById('login-btn');
-                    if (!loginBtn.disabled && document.getElementById('auth-container').style.display !== 'none') {
-                        handleLogin();
-                    }
-                } else if (activeTab && activeTab.textContent.includes('Registrati')) {
-                    const registerBtn = document.getElementById('register-btn');
-                    if (!registerBtn.disabled && document.getElementById('auth-container').style.display !== 'none') {
-                        handleRegister();
-                    }
-                }
-            }
-        });
-
-        // Expose functions to global scope (updated names)
-        window.switchAuthTab = switchAuthTab;
-        window.loginUser = loginUser;
-        window.registerUser = registerUser;
-        window.logoutUser = logoutUser;
-        window.showTab = showTab;
-        window.showTasksSubtab = showTasksSubtab;
-        window.changeMonth = changeMonth;
-        window.showDayPopup = showDayPopup;
-        window.closeDayPopup = closeDayPopup;
-        window.showTaskDetailPopup = showTaskDetailPopup;
-        window.closeTaskDetailPopup = closeTaskDetailPopup;
-        window.openAddTodoModal = openAddTodoModal;
-        window.closeTodoModal = closeTodoModal;
-        window.closeTodoModalOnBackground = closeTodoModalOnBackground;
-        window.saveTodoTask = saveTodoTask;
-        window.editTodoTask = editTodoTask;
-        window.completeTodoTask = completeTodoTask;
-        window.deleteTodoTask = deleteTodoTask;
-        window.openAddDeadlineModal = openAddDeadlineModal;
-        window.closeDeadlineModal = closeDeadlineModal;
-        window.closeDeadlineModalOnBackground = closeDeadlineModalOnBackground;
-        window.saveDeadlineTask = saveDeadlineTask;
-        window.editDeadlineTask = editDeadlineTask;
-        window.completeDeadlineTask = completeDeadlineTask;
-        window.deleteDeadlineTask = deleteDeadlineTask;
-        window.saveNote = saveNote;
-        window.editNote = editNote;
-        window.closeEditNoteModal = closeEditNoteModal;
-        window.closeEditNoteModalOnBackground = closeEditNoteModalOnBackground;
-        window.saveEditedNote = saveEditedNote;
-        window.deleteNote = deleteNote;
-        window.openHistoryNoteModal = openHistoryNoteModal;
-        window.closeHistoryNoteModal = closeHistoryNoteModal;
-        window.closeHistoryNoteModalOnBackground = closeHistoryNoteModalOnBackground;
-        window.saveHistoryNote = saveHistoryNote;
-        window.deleteHistoryNote = deleteHistoryNote;
-        window.exportTasks = exportTasks;
-        window.exportHistory = exportHistory;
-        window.showTab = showTab;
-        window.showTasksSubtab = showTasksSubtab;
-        window.changeMonth = changeMonth;
-        window.showDayPopup = showDayPopup;
-        window.closeDayPopup = closeDayPopup;
-        window.showTaskDetailPopup = showTaskDetailPopup;
-        window.closeTaskDetailPopup = closeTaskDetailPopup;
-        window.openAddTodoModal = openAddTodoModal;
-        window.closeTodoModal = closeTodoModal;
-        window.closeTodoModalOnBackground = closeTodoModalOnBackground;
-        window.saveTodoTask = saveTodoTask;
-        window.editTodoTask = editTodoTask;
-        window.completeTodoTask = completeTodoTask;
-        window.deleteTodoTask = deleteTodoTask;
-        window.openAddDeadlineModal = openAddDeadlineModal;
-        window.closeDeadlineModal = closeDeadlineModal;
-        window.closeDeadlineModalOnBackground = closeDeadlineModalOnBackground;
-        window.saveDeadlineTask = saveDeadlineTask;
-        window.editDeadlineTask = editDeadlineTask;
-        window.completeDeadlineTask = completeDeadlineTask;
-        window.deleteDeadlineTask = deleteDeadlineTask;
-        window.saveNote = saveNote;
-        window.editNote = editNote;
-        window.closeEditNoteModal = closeEditNoteModal;
-        window.closeEditNoteModalOnBackground = closeEditNoteModalOnBackground;
-        window.saveEditedNote = saveEditedNote;
-        window.deleteNote = deleteNote;
-        window.openHistoryNoteModal = openHistoryNoteModal;
-        window.closeHistoryNoteModal = closeHistoryNoteModal;
-        window.closeHistoryNoteModalOnBackground = closeHistoryNoteModalOnBackground;
-        window.saveHistoryNote = saveHistoryNote;
-        window.deleteHistoryNote = deleteHistoryNote;
-        window.exportTasks = exportTasks;
-        window.exportHistory = exportHistory;
-    </script>
 </body>
 </html>
-             = error.message;
-                }
-                
-                showAuthError(errorMessage);
-            } finally {
-                setAuthLoading(false, 'login-btn');
-            }
-        }
-
-        async function handleRegister() {
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-password-confirm').value;
-
-            if (!email || !password || !confirmPassword) {
-                showAuthError('Compila tutti i campi');
-                return;
-            }
-
-            if (password.length < 6) {
-                showAuthError('La password deve avere almeno 6 caratteri');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showAuthError('Le password non coincidono');
-                return;
-            }
-
-            setAuthLoading(true, 'register-btn');
-
-            try {
-                await window.firebase.createUserWithEmailAndPassword(window.firebase.auth, email, password);
-                // Success handled by onAuthStateChanged
-            } catch (error) {
-                console.error('Registration error:', error);
-                let errorMessage = 'Errore durante la registrazione';
-                
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'Email già in uso';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Email non valida';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'Password troppo debole';
-                        break;
-                    default:
-                        errorMessage
