@@ -977,7 +977,11 @@
             document.getElementById('auth-container').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
             document.getElementById('user-email').textContent = currentUser.email;
+            
+            // Initialize all views
             renderCalendar();
+            renderTasks();
+            renderHistory();
         }
 
         function showSuccessMessage(message) {
