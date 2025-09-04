@@ -1402,6 +1402,15 @@
                     <label>Password:</label>
                     <input type="password" id="login-password" class="auth-input" placeholder="Password">
                 </div>
+                
+                <!-- 👇 NUOVO: Link password dimenticata -->
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <button type="button" onclick="resetPassword()" 
+                            style="background: none; border: none; color: #4f46e5; text-decoration: underline; cursor: pointer; font-size: 0.9rem; transition: color 0.2s ease;">
+                        🔑 Password dimenticata?
+                    </button>
+                </div>
+                
                 <button id="login-btn" class="auth-btn" onclick="doLogin()">Accedi</button>
             </div>
 
@@ -1766,57 +1775,77 @@
             }
         }
 
-        function doLogin() {
+       function doLogin() {
     const email = document.getElementById('login-email').value.trim().toLowerCase();
     const password = document.getElementById('login-password').value;
 
+    // Controlla campi vuoti
     if (!email || !password) {
         showAuthError('Inserisci email e password');
         return;
     }
 
+    // Mostra loading
     setAuthLoading('login-btn', true);
 
     auth.signInWithEmailAndPassword(email, password)
         .then(() => {
             console.log('✅ Login success');
-            showAuthError(''); // Pulisci errori
+            showAuthError(''); // Pulisci errori precedenti
         })
         .catch((error) => {
             console.error('❌ Login error:', error);
             
-            // 🎯 MESSAGGI DI ERRORE MIGLIORATI
+            // 🎯 GESTIONE ERRORI MIGLIORATA
             let errorMessage = '';
-            switch (error.code) {
-                case 'auth/user-not-found':
-                    errorMessage = '👤 Utente non trovato. Verifica l\'email o registrati.';
-                    break;
-                case 'auth/wrong-password':
-                    errorMessage = '🔑 Password errata. Riprova.';
-                    break;
-                case 'auth/invalid-email':
-                    errorMessage = '❌ Email non valida. Controlla il formato.';
-                    break;
-                case 'auth/user-disabled':
-                    errorMessage = '🚫 Account disabilitato. Contatta l\'amministratore.';
-                    break;
-                case 'auth/too-many-requests':
-                    errorMessage = '⏰ Troppi tentativi. Riprova tra qualche minuto.';
-                    break;
-                case 'auth/network-request-failed':
-                    errorMessage = '🌐 Errore di connessione. Controlla la tua rete.';
-                    break;
-                default:
-                    errorMessage = `Errore: ${error.message}`;
+            
+            // Controlla prima il codice di errore Firebase
+            if (error.code) {
+        switch (error.code) {
+            case 'auth/user-not-found':
+            case 'auth/wrong-password':
+            case 'auth/invalid-credential':
+            case 'auth/invalid-login-credentials':
+            case 'auth/internal-error':
+                errorMessage = '❌ L\'indirizzo email e/o la password non sono corrette.';
+                break;
+            case 'auth/invalid-email':
+                errorMessage = '📧 Formato email non valido.';
+                break;
+            case 'auth/user-disabled':
+                errorMessage = '🚫 Account disabilitato. Contatta l\'amministratore.';
+                break;
+            case 'auth/too-many-requests':
+                errorMessage = '⏰ Troppi tentativi falliti. Riprova tra qualche minuto.';
+                break;
+            case 'auth/network-request-failed':
+                errorMessage = '🌐 Errore di connessione. Controlla la tua rete.';
+                break;
+            default:
+                errorMessage = '❌ L\'indirizzo email e/o la password non sono corrette.';
+        }
             }
+            // Se il messaggio contiene JSON (come nel tuo caso)
+            else if (error.message && error.message.includes('INVALID_LOGIN_CREDENTIALS')) {
+                errorMessage = '🔐 Email o password errati. Controlla i dati inseriti.';
+            }
+            // Se il messaggio contiene altri JSON
+            else if (error.message && error.message.includes('"error":{')) {
+                errorMessage = '❌ Errore di login. Verifica email e password.';
+            }
+            // Fallback per altri errori
+            else {
+                errorMessage = 'Errore di login. Riprova.';
+            }
+            
             showAuthError(errorMessage);
         })
         .finally(() => {
             setAuthLoading('login-btn', false);
         });
-     }
+    }
 
-        function doRegister() {
+       function doRegister() {
     const email = document.getElementById('register-email').value.trim().toLowerCase();
     const password = document.getElementById('register-password').value;
     const confirmPassword = document.getElementById('register-password-confirm').value;
@@ -1857,36 +1886,107 @@
         .catch((error) => {
             console.error('❌ Register error:', error);
             
-            // 🎯 MESSAGGI DI ERRORE MIGLIORATI
+            // 🎯 GESTIONE ERRORI MIGLIORATA
             let errorMessage = '';
-            switch (error.code) {
-                case 'auth/email-already-in-use':
-                    errorMessage = '📧 Questa email è già registrata. Prova a fare login.';
-                    break;
-                case 'auth/invalid-email':
-                    errorMessage = '❌ Email non valida. Controlla il formato.';
-                    break;
-                case 'auth/weak-password':
-                    errorMessage = '🔒 Password troppo debole. Usa almeno 6 caratteri.';
-                    break;
-                case 'auth/network-request-failed':
-                    errorMessage = '🌐 Errore di connessione. Controlla la tua rete.';
-                    break;
-                default:
-                    errorMessage = `Errore: ${error.message}`;
+            
+            if (error.code) {
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = '📧 Questa email è già registrata. Prova a fare login.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = '❌ Email non valida. Controlla il formato.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = '🔒 Password troppo debole. Usa almeno 6 caratteri.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = '🌐 Errore di connessione. Controlla la tua rete.';
+                        break;
+                    default:
+                        errorMessage = `Errore di registrazione: ${error.code}`;
+                }
             }
+            // Gestione errori JSON
+            else if (error.message && error.message.includes('"error":{')) {
+                errorMessage = '❌ Errore di registrazione. Riprova.';
+            }
+            else {
+                errorMessage = 'Errore di registrazione. Riprova.';
+            }
+            
             showAuthError(errorMessage);
         })
         .finally(() => {
             setAuthLoading('register-btn', false);
         });
-    }
+     }
 
         function doLogout() {
             if (confirm('Sei sicuro di voler uscire?')) {
                 auth.signOut();
             }
         }
+
+        // 🔑 FUNZIONE RESET PASSWORD
+function resetPassword() {
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    
+    if (!email) {
+        showAuthError('Inserisci la tua email nel campo sopra prima di richiedere il reset');
+        return;
+    }
+    
+    if (!isEmailAuthorized(email)) {
+        showAuthError('⛔ Email non autorizzata nel sistema');
+        return;
+    }
+    
+    const confirmReset = confirm(`📧 Inviare email di reset password a:\n${email}?`);
+    if (!confirmReset) return;
+    
+    showAuthError('📤 Invio email in corso...');
+    
+    auth.sendPasswordResetEmail(email)
+        .then(() => {
+            showAuthError('');
+            alert('✅ EMAIL INVIATA!\n\n📧 Controlla la tua casella di posta (anche spam) e segui le istruzioni per reimpostare la password.\n\n⏰ Il link scadrà tra 1 ora.');
+        })
+        .catch((error) => {
+            console.error('Reset password error:', error);
+            
+            // 🎯 GESTIONE ERRORI MIGLIORATA
+            let errorMessage = '';
+            
+            if (error.code) {
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = '👤 Nessun account trovato con questa email.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = '❌ Email non valida.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = '⏰ Troppi tentativi. Riprova tra qualche minuto.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = '🌐 Errore di connessione. Controlla la tua rete.';
+                        break;
+                    default:
+                        errorMessage = `Errore: ${error.code}`;
+                }
+            }
+            // Gestione errori JSON
+            else if (error.message && error.message.includes('"error":{')) {
+                errorMessage = '❌ Errore nell\'invio email. Riprova.';
+            }
+            else {
+                errorMessage = 'Errore nell\'invio email. Riprova.';
+            }
+            
+            showAuthError(errorMessage);
+        });
+}
 
         // App UI functions
         function showAuthScreen() {
@@ -3212,6 +3312,7 @@
         window.editNote = editNote;
         window.closeEditNoteModal = closeEditNoteModal;
         window.closeEditNoteModalOnBackground = closeEditNoteModalOnBackground;
+        window.resetPassword = resetPassword;
         window.saveEditedNote = saveEditedNote;
         window.deleteNote = deleteNote;
         window.openHistoryNoteModal = openHistoryNoteModal;
