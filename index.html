@@ -1,0 +1,2704 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#4f46e5">
+    <title>OfficeFlow - Gestione Attività</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            min-height: 100vh;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+            padding-bottom: 80px;
+            -webkit-overflow-scrolling: touch;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header h1 {
+            color: #1f2937;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .tabs {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 5px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #6b7280;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+        }
+
+        .tab-icon {
+            font-size: 1.3rem;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* CALENDARIO */
+        .calendar-container {
+            margin-bottom: 20px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        .calendar-nav {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .calendar-nav:hover {
+            background: #4338ca;
+            transform: scale(1.1);
+        }
+
+        .calendar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            flex: 1;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 2px;
+            overflow: hidden;
+        }
+
+        .calendar-day-header {
+            background: #374151;
+            color: white;
+            padding: 8px 4px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+
+        .calendar-day {
+            background: white;
+            min-height: 60px;
+            padding: 4px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .calendar-day:hover {
+            background: #f9fafb;
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-day.other-month {
+            background: #f9fafb;
+            color: #9ca3af;
+        }
+
+        .calendar-day.today {
+            background: #4f46e5;
+            color: white;
+            font-weight: 700;
+        }
+
+        .calendar-day.today:hover {
+            background: #4338ca;
+        }
+
+        .day-number {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .day-tasks {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .task-dot {
+            width: 100%;
+            height: 3px;
+            border-radius: 2px;
+            margin: 1px 0;
+        }
+
+        .task-dot.todo { background: #f59e0b; }
+        .task-dot.deadline { background: #dc2626; }
+
+        /* Day Popup */
+        .day-popup {
+            position: absolute;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            z-index: 3000;
+            min-width: 280px;
+            max-width: 320px;
+            border: 2px solid #4f46e5;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .day-popup.show {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .day-popup-header {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f3f4f6;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-popup-close {
+            cursor: pointer;
+            color: #9ca3af;
+            font-size: 1.4rem;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            margin-left: 10px;
+        }
+
+        .day-popup-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: #dc2626;
+        }
+
+        .day-popup-section {
+            margin-bottom: 15px;
+        }
+
+        .day-popup-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .day-popup-section-title {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .day-popup-task {
+            background: #f9fafb;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            border-left: 3px solid;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-popup-task:hover {
+            background: #f3f4f6;
+            transform: translateX(2px);
+        }
+
+        .day-popup-task:last-child {
+            margin-bottom: 0;
+        }
+
+        .day-popup-task.todo {
+            border-left-color: #f59e0b;
+        }
+
+        .day-popup-task.deadline {
+            border-left-color: #dc2626;
+        }
+
+        .day-popup-task-content {
+            flex: 1;
+        }
+
+        .day-popup-task-title {
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.85rem;
+            margin-bottom: 2px;
+        }
+
+        .day-popup-task-actions {
+            display: flex;
+            gap: 2px;
+            margin-left: 8px;
+        }
+
+        .day-popup-action-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            transition: all 0.2s ease;
+        }
+
+        .day-popup-action-btn.complete {
+            background: #10b981;
+            color: white;
+        }
+
+        .day-popup-action-btn.complete:hover {
+            background: #059669;
+            transform: scale(1.1);
+        }
+
+        .day-popup-action-btn.edit {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .day-popup-action-btn.edit:hover {
+            background: #d97706;
+            transform: scale(1.1);
+        }
+
+        .day-popup-action-btn.delete {
+            background: #dc2626;
+            color: white;
+        }
+
+        .day-popup-action-btn.delete:hover {
+            background: #b91c1c;
+            transform: scale(1.1);
+        }
+
+        .empty-day {
+            color: #9ca3af;
+            font-style: italic;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        /* Task Detail Popup */
+        .task-detail-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 4000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .task-detail-popup.show {
+            display: flex;
+        }
+
+        .task-detail-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .task-detail-popup.show .task-detail-content {
+            transform: scale(1);
+        }
+
+        .task-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .task-detail-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1f2937;
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .task-detail-close {
+            cursor: pointer;
+            color: #9ca3af;
+            font-size: 1.5rem;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .task-detail-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: #dc2626;
+        }
+
+        .task-detail-description {
+            color: #6b7280;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .task-detail-meta {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+
+        .task-detail-meta-item {
+            margin-bottom: 5px;
+            color: #374151;
+        }
+
+        .task-detail-meta-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .task-detail-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .task-detail-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .task-detail-btn.complete {
+            background: #10b981;
+            color: white;
+        }
+
+        .task-detail-btn.complete:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .task-detail-btn.edit {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .task-detail-btn.edit:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+        }
+
+        .task-detail-btn.delete {
+            background: #dc2626;
+            color: white;
+        }
+
+        .task-detail-btn.delete:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        /* TASKS - NEW SUB-TAB SYSTEM */
+        .tasks-header {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 20px;
+            gap: 4px;
+        }
+
+        .tasks-subtab {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tasks-subtab.active {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+        }
+
+        .tasks-subtab:hover:not(.active) {
+            background: rgba(79, 70, 229, 0.1);
+            color: #4f46e5;
+        }
+
+        .tasks-content {
+            display: none;
+        }
+
+        .tasks-content.active {
+            display: block;
+        }
+
+        .tasks-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .section-title-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-task-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .add-task-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* MODIFIED TASK CARD STYLES */
+        .task-card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4f46e5;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-card.todo {
+            border-left-color: #f59e0b;
+        }
+
+        .task-card.deadline {
+            border-left-color: #dc2626;
+        }
+
+        /* IMPROVED TASK HEADER - BUTTONS MOVED TO RIGHT */
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+
+        .task-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1f2937;
+            flex: 1;
+            margin-right: 8px;
+        }
+
+        /* COMPACT HEADER BUTTONS */
+        .task-header-buttons {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .task-header-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+        }
+
+        .task-header-btn.complete {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .task-header-btn.complete:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+        }
+
+        .task-header-btn.edit {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .task-header-btn.edit:hover {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+        }
+
+        .task-header-btn.delete {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+        }
+
+        .task-header-btn.delete:hover {
+            background: linear-gradient(135deg, #b91c1c, #991b1b);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+        }
+
+        /* ALWAYS VISIBLE DESCRIPTION BOX */
+        .task-description-box {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            color: #6b7280;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .task-description-box.empty {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .task-dates {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 0;
+            font-size: 0.8rem;
+        }
+
+        .task-date {
+            background: #f3f4f6;
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: #374151;
+        }
+
+        .task-date.deadline {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .task-date.overdue {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            touch-action: manipulation;
+            transition: transform 0.1s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, #9ca3af, #6b7280);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #9ca3af;
+            padding: 30px 20px;
+            font-size: 1rem;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% - 40px);
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #1f2937;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #f3f4f6;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* HISTORY STYLES WITH NOTES SYSTEM */
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .history-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #10b981;
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .history-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .history-date {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+        }
+
+        .history-task-name {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 3px;
+            word-wrap: break-word;
+        }
+
+        .history-task-description {
+            color: #6b7280;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .history-note-btn {
+            background: white;
+            border: 2px solid #374151;
+            color: #374151;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .history-note-btn:hover {
+            background: #f9fafb;
+            transform: translateY(-1px);
+        }
+
+        .history-note-btn.has-note {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .history-note-btn.has-note:hover {
+            background: #059669;
+            border-color: #059669;
+        }
+
+        .history-note {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-left: 4px solid #10b981;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-top: 12px;
+            position: relative;
+        }
+
+        .history-note-content {
+            color: #374151;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            word-wrap: break-word;
+        }
+
+        .history-note-date {
+            color: #6b7280;
+            font-size: 0.75rem;
+            font-style: italic;
+        }
+
+        .history-note-actions {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .history-note-action {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .history-note-action:hover {
+            background: white;
+            color: #374151;
+        }
+
+        .history-note-action.delete:hover {
+            color: #dc2626;
+            border-color: #dc2626;
+        }
+
+        /* NOTES - IMPROVED WITH EDIT/DELETE */
+        .notes-section {
+            margin-bottom: 30px;
+        }
+
+        .notes-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f3f4f6;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 15px;
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .notes-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4f46e5;
+            position: relative;
+        }
+
+        .notes-date {
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+
+        .notes-text {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 10px;
+            padding-right: 60px;
+            word-wrap: break-word;
+        }
+
+        .notes-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .notes-action-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+        }
+
+        .notes-action-btn:hover {
+            background: white;
+            color: #374151;
+            transform: translateY(-1px);
+        }
+
+        .notes-action-btn.edit:hover {
+            color: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        .notes-action-btn.delete:hover {
+            color: #dc2626;
+            border-color: #dc2626;
+        }
+
+        /* Loading and success states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+            animation: fadeInOut 3s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 480px) {
+            .task-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .task-header-buttons {
+                align-self: flex-end;
+                gap: 6px;
+            }
+            
+            .task-header-btn {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .day-popup {
+                min-width: 260px;
+                max-width: 300px;
+            }
+            
+            .task-detail-content {
+                margin: 10px;
+                width: calc(100% - 20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 OfficeFlow</h1>
+            <p>Gestione Attività di Segreteria</p>
+        </div>
+
+        <div class="content">
+            <!-- Calendario Tab -->
+            <div id="calendar" class="tab-content active">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
+                        <div class="calendar-title" id="calendar-title"></div>
+                        <button class="calendar-nav" onclick="changeMonth(1)">›</button>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid"></div>
+                </div>
+            </div>
+
+            <!-- Tasks Tab -->
+            <div id="tasks" class="tab-content">
+                <div class="tasks-header">
+                    <div class="tasks-subtab active" onclick="showTasksSubtab('todo', this)">
+                        ⏰ Da Fare
+                    </div>
+                    <div class="tasks-subtab" onclick="showTasksSubtab('deadline', this)">
+                        📅 Scadenze
+                    </div>
+                </div>
+
+                <!-- Attività Da Fare -->
+                <div id="todo-content" class="tasks-content active">
+                    <div class="tasks-section">
+                        <div class="section-title">
+                            <div class="section-title-left">
+                                <span>⏰ Attività Da Fare</span>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="export-btn" onclick="exportTasks('todo')" title="Esporta attività da fare">
+                                    📄 Export PDF
+                                </button>
+                                <button class="add-task-btn" onclick="openAddTodoModal()" title="Aggiungi attività da fare">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                        <div id="todo-tasks"></div>
+                    </div>
+                </div>
+
+                <!-- Attività Con Scadenza -->
+                <div id="deadline-content" class="tasks-content">
+                    <div class="tasks-section">
+                        <div class="section-title">
+                            <div class="section-title-left">
+                                <span>📅 Attività Con Scadenza</span>
+                            </div>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="export-btn" onclick="exportTasks('deadline')" title="Esporta attività con scadenza">
+                                    📄 Export PDF
+                                </button>
+                                <button class="add-task-btn" onclick="openAddDeadlineModal()" title="Aggiungi attività con scadenza">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                        <div id="deadline-tasks"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="history" class="tab-content">
+                <div class="history-header">
+                    <h3 class="section-title">✅ Attività Completate</h3>
+                    <button class="export-btn" onclick="exportHistory()" title="Esporta cronologia">
+                        📄 Export PDF
+                    </button>
+                </div>
+                <div id="history-list"></div>
+            </div>
+
+            <!-- Notes Tab -->
+            <div id="notes" class="tab-content">
+                <div class="notes-section">
+                    <h3 class="section-title">📝 Note</h3>
+                    <textarea id="notes-text" class="notes-input" placeholder="Scrivi qui le tue note..."></textarea>
+                    <button class="btn btn-primary" onclick="saveNote()">💾 Salva Nota</button>
+                    <div id="saved-notes" style="margin-top: 20px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day Popup -->
+    <div id="day-popup" class="day-popup">
+        <div class="day-popup-header">
+            <span id="day-popup-date"></span>
+            <div class="day-popup-close" onclick="closeDayPopup()">×</div>
+        </div>
+        <div id="day-popup-content"></div>
+    </div>
+
+    <!-- Task Detail Popup -->
+    <div id="task-detail-popup" class="task-detail-popup">
+        <div class="task-detail-content">
+            <div class="task-detail-header">
+                <div class="task-detail-title" id="task-detail-title"></div>
+                <div class="task-detail-close" onclick="closeTaskDetailPopup()">×</div>
+            </div>
+            <div class="task-detail-description" id="task-detail-description"></div>
+            <div class="task-detail-meta" id="task-detail-meta"></div>
+            <div class="task-detail-actions" id="task-detail-actions"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('calendar', this)">
+            <div class="tab-icon">📅</div>
+            <div>Calendario</div>
+        </div>
+        <div class="tab" onclick="showTab('tasks', this)">
+            <div class="tab-icon">📋</div>
+            <div>Attività</div>
+        </div>
+        <div class="tab" onclick="showTab('history', this)">
+            <div class="tab-icon">✅</div>
+            <div>Storia</div>
+        </div>
+        <div class="tab" onclick="showTab('notes', this)">
+            <div class="tab-icon">📝</div>
+            <div>Note</div>
+        </div>
+    </div>
+
+    <!-- Modal Attività Da Fare -->
+    <div id="todo-modal" class="modal" onclick="closeTodoModalOnBackground(event)">
+        <div class="modal-content">
+            <span class="close" onclick="closeTodoModal()">&times;</span>
+            <h3>⏰ Nuova Attività Da Fare</h3>
+            
+            <div class="form-group">
+                <label>Titolo:</label>
+                <input type="text" id="todo-title" placeholder="es. Controllare email">
+            </div>
+            <div class="form-group">
+                <label>Descrizione:</label>
+                <textarea id="todo-description" placeholder="Descrizione dettagliata dell'attività..."></textarea>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" onclick="closeTodoModal()">❌ Annulla</button>
+                <button class="btn" onclick="saveTodoTask()">➕ Aggiungi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Attività Con Scadenza -->
+    <div id="deadline-modal" class="modal" onclick="closeDeadlineModalOnBackground(event)">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeadlineModal()">&times;</span>
+            <h3>📅 Nuova Attività Con Scadenza</h3>
+            
+            <div class="form-group">
+                <label>Titolo:</label>
+                <input type="text" id="deadline-title" placeholder="es. Preparare report mensile">
+            </div>
+            <div class="form-group">
+                <label>Descrizione:</label>
+                <textarea id="deadline-description" placeholder="Descrizione dettagliata dell'attività..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Data di inizio:</label>
+                <input type="date" id="deadline-start-date">
+            </div>
+            <div class="form-group">
+                <label>Data di scadenza:</label>
+                <input type="date" id="deadline-due-date">
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" onclick="closeDeadlineModal()">❌ Annulla</button>
+                <button class="btn" onclick="saveDeadlineTask()">➕ Aggiungi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Note Storia -->
+    <div id="history-note-modal" class="modal" onclick="closeHistoryNoteModalOnBackground(event)">
+        <div class="modal-content">
+            <span class="close" onclick="closeHistoryNoteModal()">&times;</span>
+            <h3 id="history-note-modal-title">📝 Aggiungi Nota</h3>
+            
+            <div class="form-group">
+                <label>Nota:</label>
+                <textarea id="history-note-text" placeholder="Scrivi qui la nota per questa attività completata..."></textarea>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" onclick="closeHistoryNoteModal()">❌ Annulla</button>
+                <button class="btn" id="history-note-save-btn" onclick="saveHistoryNote()">💾 Salva Nota</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Modifica Note -->
+    <div id="edit-note-modal" class="modal" onclick="closeEditNoteModalOnBackground(event)">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditNoteModal()">&times;</span>
+            <h3>✏️ Modifica Nota</h3>
+            
+            <div class="form-group">
+                <label>Nota:</label>
+                <textarea id="edit-note-text" placeholder="Modifica la tua nota..."></textarea>
+            </div>
+            
+            <div class="modal-buttons">
+                <button class="btn btn-cancel" onclick="closeEditNoteModal()">❌ Annulla</button>
+                <button class="btn" onclick="saveEditedNote()">💾 Salva Modifiche</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentDate = new Date();
+        let todos = JSON.parse(localStorage.getItem('officeflow_todos') || '[]');
+        let deadlineTasks = JSON.parse(localStorage.getItem('officeflow_deadlines') || '[]');
+        let completedTasks = JSON.parse(localStorage.getItem('officeflow_completed') || '[]');
+        let notes = JSON.parse(localStorage.getItem('officeflow_notes') || '[]');
+        let editingHistoryNoteTaskId = null;
+        let editingNoteId = null;
+        let currentTasksSubtab = 'todo';
+
+        // Utility functions
+        function saveData() {
+            localStorage.setItem('officeflow_todos', JSON.stringify(todos));
+            localStorage.setItem('officeflow_deadlines', JSON.stringify(deadlineTasks));
+            localStorage.setItem('officeflow_completed', JSON.stringify(completedTasks));
+            localStorage.setItem('officeflow_notes', JSON.stringify(notes));
+        }
+
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('it-IT');
+        }
+
+        function formatDateTime(date) {
+            return new Date(date).toLocaleDateString('it-IT', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function getDaysUntilDeadline(deadlineDate) {
+            const today = new Date();
+            const deadline = new Date(deadlineDate);
+            const diffTime = deadline - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            document.querySelector('.content').prepend(successDiv);
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+
+        function showTab(tabName, tabElement) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            tabElement.classList.add('active');
+            
+            setTimeout(() => {
+                if (tabName === 'calendar') {
+                    renderCalendar();
+                } else if (tabName === 'tasks') {
+                    renderTasks();
+                } else if (tabName === 'history') {
+                    renderHistory();
+                } else if (tabName === 'notes') {
+                    renderNotes();
+                }
+            }, 50);
+        }
+
+        // Tasks subtab system
+        function showTasksSubtab(subtabName, subtabElement) {
+            currentTasksSubtab = subtabName;
+            
+            const subtabs = document.querySelectorAll('.tasks-subtab');
+            subtabs.forEach(subtab => subtab.classList.remove('active'));
+            
+            const contents = document.querySelectorAll('.tasks-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            subtabElement.classList.add('active');
+            document.getElementById(subtabName + '-content').classList.add('active');
+            
+            renderTasks();
+        }
+
+        // Calendar functions
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            const monthNames = [
+                'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+            ];
+            document.getElementById('calendar-title').textContent = `${monthNames[month]} ${year}`;
+            
+            const firstDay = new Date(year, month, 1);
+            const startDate = new Date(firstDay);
+            const dayOfWeek = firstDay.getDay();
+            const startOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+            startDate.setDate(startDate.getDate() - startOffset);
+            
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            
+            const dayHeaders = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+            dayHeaders.forEach(day => {
+                const headerEl = document.createElement('div');
+                headerEl.className = 'calendar-day-header';
+                headerEl.textContent = day;
+                grid.appendChild(headerEl);
+            });
+            
+            const today = new Date();
+            const currentDay = new Date(startDate);
+            
+            for (let i = 0; i < 42; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                
+                const isCurrentMonth = currentDay.getMonth() === month;
+                const isToday = currentDay.toDateString() === today.toDateString();
+                
+                if (!isCurrentMonth) {
+                    dayEl.classList.add('other-month');
+                }
+                
+                if (isToday) {
+                    dayEl.classList.add('today');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = currentDay.getDate();
+                dayEl.appendChild(dayNumber);
+                
+                const tasksContainer = document.createElement('div');
+                tasksContainer.className = 'day-tasks';
+                
+                if (isCurrentMonth) {
+                    if (isToday) {
+                        todos.filter(todo => !todo.completed).forEach(() => {
+                            const taskDot = document.createElement('div');
+                            taskDot.className = 'task-dot todo';
+                            tasksContainer.appendChild(taskDot);
+                        });
+                    }
+                    
+                    deadlineTasks.filter(task => !task.completed).forEach(task => {
+                        const taskDate = new Date(task.dueDate);
+                        if (taskDate.toDateString() === currentDay.toDateString()) {
+                            const taskDot = document.createElement('div');
+                            taskDot.className = 'task-dot deadline';
+                            tasksContainer.appendChild(taskDot);
+                        }
+                    });
+                }
+                
+                dayEl.appendChild(tasksContainer);
+                
+                const dayDate = new Date(currentDay);
+                dayEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showDayPopup(dayDate, dayEl);
+                });
+                
+                grid.appendChild(dayEl);
+                currentDay.setDate(currentDay.getDate() + 1);
+            }
+        }
+
+        // Day popup functions with enhanced task interaction
+        function showDayPopup(date, dayElement) {
+            const popup = document.getElementById('day-popup');
+            const dateHeader = document.getElementById('day-popup-date');
+            const content = document.getElementById('day-popup-content');
+            
+            dateHeader.textContent = date.toLocaleDateString('it-IT', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            
+            const { todoTasks, deadlineTasks: deadlineTasksForDay } = getTasksForDate(date);
+            let contentHtml = '';
+            
+            if (todoTasks.length > 0) {
+                contentHtml += `
+                    <div class="day-popup-section">
+                        <div class="day-popup-section-title">
+                            ⏰ Attività da fare
+                        </div>
+                        ${todoTasks.map(task => `
+                            <div class="day-popup-task todo" onclick="showTaskDetailPopup(${task.id}, 'todo', event)">
+                                <div class="day-popup-task-content">
+                                    <div class="day-popup-task-title">${task.title}</div>
+                                </div>
+                                <div class="day-popup-task-actions" onclick="event.stopPropagation()">
+                                    <button class="day-popup-action-btn complete" onclick="completeTodoTask(${task.id})" title="Completa">
+                                        ✓
+                                    </button>
+                                    <button class="day-popup-action-btn edit" onclick="editTodoTask(${task.id})" title="Modifica">
+                                        ✏️
+                                    </button>
+                                    <button class="day-popup-action-btn delete" onclick="deleteTodoTask(${task.id})" title="Elimina">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            if (deadlineTasksForDay.length > 0) {
+                contentHtml += `
+                    <div class="day-popup-section">
+                        <div class="day-popup-section-title">
+                            📅 Scadenze
+                        </div>
+                        ${deadlineTasksForDay.map(task => `
+                            <div class="day-popup-task deadline" onclick="showTaskDetailPopup(${task.id}, 'deadline', event)">
+                                <div class="day-popup-task-content">
+                                    <div class="day-popup-task-title">${task.title}</div>
+                                </div>
+                                <div class="day-popup-task-actions" onclick="event.stopPropagation()">
+                                    <button class="day-popup-action-btn complete" onclick="completeDeadlineTask(${task.id})" title="Completa">
+                                        ✓
+                                    </button>
+                                    <button class="day-popup-action-btn edit" onclick="editDeadlineTask(${task.id})" title="Modifica">
+                                        ✏️
+                                    </button>
+                                    <button class="day-popup-action-btn delete" onclick="deleteDeadlineTask(${task.id})" title="Elimina">
+                                        🗑️
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            if (todoTasks.length === 0 && deadlineTasksForDay.length === 0) {
+                contentHtml = '<div class="empty-day">📅 Nessuna attività programmata per questo giorno</div>';
+            }
+            
+            content.innerHTML = contentHtml;
+            
+            const rect = dayElement.getBoundingClientRect();
+            
+            let left = rect.left + (rect.width / 2) - 150;
+            let top = rect.bottom + 10;
+            
+            if (left < 10) left = 10;
+            if (left + 300 > window.innerWidth - 10) left = window.innerWidth - 310;
+            if (top + 200 > window.innerHeight - 10) top = rect.top - 220;
+            
+            popup.style.left = left + 'px';
+            popup.style.top = top + 'px';
+            popup.classList.add('show');
+            
+            setTimeout(() => {
+                document.addEventListener('click', closeDayPopupOnClick);
+            }, 100);
+        }
+
+        function getTasksForDate(date) {
+            const today = new Date();
+            const isToday = date.toDateString() === today.toDateString();
+            
+            let todoTasksForDay = [];
+            let deadlineTasksForDay = [];
+            
+            if (isToday) {
+                todoTasksForDay = todos.filter(todo => !todo.completed);
+            }
+            
+            deadlineTasksForDay = deadlineTasks.filter(task => {
+                if (task.completed) return false;
+                const taskDate = new Date(task.dueDate);
+                return taskDate.toDateString() === date.toDateString();
+            });
+            
+            return { todoTasks: todoTasksForDay, deadlineTasks: deadlineTasksForDay };
+        }
+
+        function closeDayPopup() {
+            const popup = document.getElementById('day-popup');
+            popup.classList.remove('show');
+            document.removeEventListener('click', closeDayPopupOnClick);
+        }
+
+        function closeDayPopupOnClick(event) {
+            const popup = document.getElementById('day-popup');
+            if (!popup.contains(event.target)) {
+                closeDayPopup();
+            }
+        }
+
+        // Task detail popup functions
+        function showTaskDetailPopup(taskId, taskType, event) {
+            event.stopPropagation();
+            
+            const popup = document.getElementById('task-detail-popup');
+            const title = document.getElementById('task-detail-title');
+            const description = document.getElementById('task-detail-description');
+            const meta = document.getElementById('task-detail-meta');
+            const actions = document.getElementById('task-detail-actions');
+            
+            let task;
+            if (taskType === 'todo') {
+                task = todos.find(t => t.id === taskId);
+            } else {
+                task = deadlineTasks.find(t => t.id === taskId);
+            }
+            
+            if (!task) return;
+            
+            title.textContent = task.title;
+            description.textContent = task.description;
+            
+            let metaHtml = `<div class="task-detail-meta-item"><strong>Creata:</strong> ${formatDateTime(task.createdAt)}</div>`;
+            
+            if (taskType === 'deadline') {
+                metaHtml += `<div class="task-detail-meta-item"><strong>Inizio:</strong> ${formatDate(task.startDate)}</div>`;
+                metaHtml += `<div class="task-detail-meta-item"><strong>Scadenza:</strong> ${formatDate(task.dueDate)}</div>`;
+                
+                const daysUntil = getDaysUntilDeadline(task.dueDate);
+                let statusText = '';
+                if (daysUntil < 0) {
+                    statusText = `Scaduta ${Math.abs(daysUntil)} giorni fa`;
+                } else if (daysUntil === 0) {
+                    statusText = 'Scade oggi!';
+                } else {
+                    statusText = `Scade in ${daysUntil} giorni`;
+                }
+                metaHtml += `<div class="task-detail-meta-item"><strong>Stato:</strong> ${statusText}</div>`;
+            }
+            
+            meta.innerHTML = metaHtml;
+            
+            const completeAction = taskType === 'todo' ? `completeTodoTask(${taskId})` : `completeDeadlineTask(${taskId})`;
+            const editAction = taskType === 'todo' ? `editTodoTask(${taskId})` : `editDeadlineTask(${taskId})`;
+            const deleteAction = taskType === 'todo' ? `deleteTodoTask(${taskId})` : `deleteDeadlineTask(${taskId})`;
+            
+            actions.innerHTML = `
+                <button class="task-detail-btn complete" onclick="${completeAction}">
+                    ✓ Completa
+                </button>
+                <button class="task-detail-btn edit" onclick="${editAction}">
+                    ✏️ Modifica
+                </button>
+                <button class="task-detail-btn delete" onclick="${deleteAction}">
+                    🗑️ Elimina
+                </button>
+            `;
+            
+            popup.classList.add('show');
+        }
+
+        function closeTaskDetailPopup() {
+            const popup = document.getElementById('task-detail-popup');
+            popup.classList.remove('show');
+        }
+
+        // Task management functions
+        function renderTasks() {
+            if (currentTasksSubtab === 'todo') {
+                renderTodoTasks();
+            } else {
+                renderDeadlineTasks();
+            }
+        }
+
+        function renderTodoTasks() {
+            const container = document.getElementById('todo-tasks');
+            const activeTodos = todos.filter(todo => !todo.completed);
+            
+            if (activeTodos.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nessuna attività da fare 🎉</div>';
+                return;
+            }
+            
+            container.innerHTML = activeTodos.map(todo => `
+                <div class="task-card todo">
+                    <div class="task-header">
+                        <div class="task-title">${todo.title}</div>
+                        <div class="task-header-buttons">
+                            <button class="task-header-btn complete" onclick="completeTodoTask(${todo.id})" title="Completa">
+                                ✓
+                            </button>
+                            <button class="task-header-btn edit" onclick="editTodoTask(${todo.id})" title="Modifica">
+                                ✏️
+                            </button>
+                            <button class="task-header-btn delete" onclick="deleteTodoTask(${todo.id})" title="Elimina">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    <div class="task-description-box ${!todo.description ? 'empty' : ''}">
+                        ${todo.description || 'Nessuna descrizione disponibile'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderDeadlineTasks() {
+            const container = document.getElementById('deadline-tasks');
+            const activeDeadlines = deadlineTasks.filter(task => !task.completed);
+            
+            if (activeDeadlines.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nessuna attività con scadenza 📅</div>';
+                return;
+            }
+            
+            activeDeadlines.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+            
+            container.innerHTML = activeDeadlines.map(task => {
+                const daysUntil = getDaysUntilDeadline(task.dueDate);
+                let statusClass = '';
+                let statusText = '';
+                
+                if (daysUntil < 0) {
+                    statusClass = 'overdue';
+                    statusText = `Scaduta ${Math.abs(daysUntil)} giorni fa`;
+                } else if (daysUntil === 0) {
+                    statusClass = 'deadline';
+                    statusText = 'Scade oggi!';
+                } else if (daysUntil <= 3) {
+                    statusClass = 'deadline';
+                    statusText = `Scade in ${daysUntil} giorni`;
+                } else {
+                    statusText = `Scade in ${daysUntil} giorni`;
+                }
+                
+                return `
+                    <div class="task-card deadline">
+                        <div class="task-header">
+                            <div class="task-title">${task.title}</div>
+                            <div class="task-header-buttons">
+                                <button class="task-header-btn complete" onclick="completeDeadlineTask(${task.id})" title="Completa">
+                                    ✓
+                                </button>
+                                <button class="task-header-btn edit" onclick="editDeadlineTask(${task.id})" title="Modifica">
+                                    ✏️
+                                </button>
+                                <button class="task-header-btn delete" onclick="deleteDeadlineTask(${task.id})" title="Elimina">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                        <div class="task-description-box ${!task.description ? 'empty' : ''}">
+                            ${task.description || 'Nessuna descrizione disponibile'}
+                        </div>
+                        <div class="task-dates">
+                            <div class="task-date">Inizio: ${formatDate(task.startDate)}</div>
+                            <div class="task-date ${statusClass}">Scadenza: ${formatDate(task.dueDate)}</div>
+                        </div>
+                        <div class="task-date ${statusClass}" style="font-weight: 600; margin-top: 8px;">${statusText}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Todo task functions
+        function openAddTodoModal() {
+            window.editingTodoId = null;
+            document.getElementById('todo-title').value = '';
+            document.getElementById('todo-description').value = '';
+            document.querySelector('#todo-modal h3').textContent = '⏰ Nuova Attività Da Fare';
+            document.querySelector('#todo-modal .btn:not(.btn-cancel)').textContent = '➕ Aggiungi';
+            document.getElementById('todo-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTodoModal() {
+            document.getElementById('todo-modal').style.display = 'none';
+            document.body.style.overflow = '';
+            window.editingTodoId = null;
+        }
+
+        function closeTodoModalOnBackground(event) {
+            if (event.target === event.currentTarget) {
+                closeTodoModal();
+            }
+        }
+
+        function saveTodoTask() {
+            const title = document.getElementById('todo-title').value.trim();
+            const description = document.getElementById('todo-description').value.trim();
+            
+            if (!title) {
+                alert('⚠️ Inserisci il titolo dell\'attività!');
+                return;
+            }
+            
+            if (window.editingTodoId) {
+                const todo = todos.find(t => t.id === window.editingTodoId);
+                if (todo) {
+                    todo.title = title;
+                    todo.description = description;
+                    todo.updatedAt = new Date().toISOString();
+                }
+                showSuccessMessage('Attività modificata con successo!');
+            } else {
+                const newTodo = {
+                    id: Date.now(),
+                    title: title,
+                    description: description,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                todos.push(newTodo);
+                showSuccessMessage('Attività aggiunta con successo!');
+            }
+            
+            saveData();
+            closeTodoModal();
+            closeTaskDetailPopup();
+            renderTasks();
+            renderCalendar();
+        }
+
+        function editTodoTask(id) {
+            const todo = todos.find(t => t.id === id);
+            if (!todo) return;
+            
+            document.getElementById('todo-title').value = todo.title;
+            document.getElementById('todo-description').value = todo.description;
+            window.editingTodoId = id;
+            document.querySelector('#todo-modal h3').textContent = '✏️ Modifica Attività Da Fare';
+            document.querySelector('#todo-modal .btn:not(.btn-cancel)').textContent = '💾 Salva Modifiche';
+            document.getElementById('todo-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function completeTodoTask(id) {
+            if (confirm('✅ Sei sicuro di aver completato questa attività?')) {
+                const todoIndex = todos.findIndex(t => t.id === id);
+                if (todoIndex !== -1) {
+                    const todo = todos[todoIndex];
+                    todo.completed = true;
+                    todo.completedAt = new Date().toISOString();
+                    
+                    completedTasks.unshift({
+                        ...todo,
+                        type: 'todo'
+                    });
+                    
+                    todos.splice(todoIndex, 1);
+                    
+                    saveData();
+                    closeDayPopup();
+                    closeTaskDetailPopup();
+                    renderTasks();
+                    renderCalendar();
+                    renderHistory();
+                    showSuccessMessage('Attività completata!');
+                }
+            }
+        }
+
+        function deleteTodoTask(id) {
+            if (confirm('🗑️ Sei sicuro di voler eliminare definitivamente questa attività?')) {
+                todos = todos.filter(t => t.id !== id);
+                saveData();
+                closeDayPopup();
+                closeTaskDetailPopup();
+                renderTasks();
+                renderCalendar();
+                showSuccessMessage('Attività eliminata!');
+            }
+        }
+
+        // Deadline task functions
+        function openAddDeadlineModal() {
+            window.editingDeadlineId = null;
+            document.getElementById('deadline-title').value = '';
+            document.getElementById('deadline-description').value = '';
+            document.getElementById('deadline-start-date').value = '';
+            document.getElementById('deadline-due-date').value = '';
+            document.querySelector('#deadline-modal h3').textContent = '📅 Nuova Attività Con Scadenza';
+            document.querySelector('#deadline-modal .btn:not(.btn-cancel)').textContent = '➕ Aggiungi';
+            document.getElementById('deadline-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDeadlineModal() {
+            document.getElementById('deadline-modal').style.display = 'none';
+            document.body.style.overflow = '';
+            window.editingDeadlineId = null;
+        }
+
+        function closeDeadlineModalOnBackground(event) {
+            if (event.target === event.currentTarget) {
+                closeDeadlineModal();
+            }
+        }
+
+        function saveDeadlineTask() {
+            const title = document.getElementById('deadline-title').value.trim();
+            const description = document.getElementById('deadline-description').value.trim();
+            const startDate = document.getElementById('deadline-start-date').value;
+            const dueDate = document.getElementById('deadline-due-date').value;
+            
+            if (!title) {
+                alert('⚠️ Inserisci il titolo dell\'attività!');
+                return;
+            }
+            
+            if (!startDate || !dueDate) {
+                alert('⚠️ Inserisci entrambe le date!');
+                return;
+            }
+            
+            if (new Date(startDate) > new Date(dueDate)) {
+                alert('⚠️ La data di inizio non può essere successiva alla scadenza!');
+                return;
+            }
+            
+            if (window.editingDeadlineId) {
+                const task = deadlineTasks.find(t => t.id === window.editingDeadlineId);
+                if (task) {
+                    task.title = title;
+                    task.description = description;
+                    task.startDate = startDate;
+                    task.dueDate = dueDate;
+                    task.updatedAt = new Date().toISOString();
+                }
+                showSuccessMessage('Attività modificata con successo!');
+            } else {
+                const newDeadlineTask = {
+                    id: Date.now(),
+                    title: title,
+                    description: description,
+                    startDate: startDate,
+                    dueDate: dueDate,
+                    completed: false,
+                    createdAt: new Date().toISOString()
+                };
+                deadlineTasks.push(newDeadlineTask);
+                showSuccessMessage('Attività aggiunta con successo!');
+            }
+            
+            saveData();
+            closeDeadlineModal();
+            closeTaskDetailPopup();
+            renderTasks();
+            renderCalendar();
+        }
+
+        function editDeadlineTask(id) {
+            const task = deadlineTasks.find(t => t.id === id);
+            if (!task) return;
+            
+            document.getElementById('deadline-title').value = task.title;
+            document.getElementById('deadline-description').value = task.description;
+            document.getElementById('deadline-start-date').value = task.startDate;
+            document.getElementById('deadline-due-date').value = task.dueDate;
+            window.editingDeadlineId = id;
+            document.querySelector('#deadline-modal h3').textContent = '✏️ Modifica Attività Con Scadenza';
+            document.querySelector('#deadline-modal .btn:not(.btn-cancel)').textContent = '💾 Salva Modifiche';
+            document.getElementById('deadline-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function completeDeadlineTask(id) {
+            if (confirm('✅ Sei sicuro di aver completato questa attività?')) {
+                const taskIndex = deadlineTasks.findIndex(t => t.id === id);
+                if (taskIndex !== -1) {
+                    const task = deadlineTasks[taskIndex];
+                    task.completed = true;
+                    task.completedAt = new Date().toISOString();
+                    
+                    completedTasks.unshift({
+                        ...task,
+                        type: 'deadline'
+                    });
+                    
+                    deadlineTasks.splice(taskIndex, 1);
+                    
+                    saveData();
+                    closeDayPopup();
+                    closeTaskDetailPopup();
+                    renderTasks();
+                    renderCalendar();
+                    renderHistory();
+                    showSuccessMessage('Attività completata!');
+                }
+            }
+        }
+
+        function deleteDeadlineTask(id) {
+            if (confirm('🗑️ Sei sicuro di voler eliminare definitivamente questa attività?')) {
+                deadlineTasks = deadlineTasks.filter(t => t.id !== id);
+                saveData();
+                closeDayPopup();
+                closeTaskDetailPopup();
+                renderTasks();
+                renderCalendar();
+                showSuccessMessage('Attività eliminata!');
+            }
+        }
+
+        // History functions with notes system
+        function renderHistory() {
+            const container = document.getElementById('history-list');
+            
+            if (completedTasks.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nessuna attività completata ancora.<br>Completa la prima attività! 🎯</div>';
+                return;
+            }
+            
+            const sortedTasks = [...completedTasks].sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+            
+            container.innerHTML = sortedTasks.map(task => `
+                <div class="history-item">
+                    <div class="history-item-header">
+                        <div class="history-item-info">
+                            <div class="history-date">
+                                Completata il ${formatDate(task.completedAt)}
+                                ${task.type === 'deadline' ? '📅' : '⏰'}
+                            </div>
+                            <div class="history-task-name">${task.title}</div>
+                            <div class="history-task-description">${task.description}</div>
+                            ${task.type === 'deadline' ? `
+                                <div style="font-size: 0.8rem; color: #6b7280; margin-top: 5px;">
+                                    Scadenza era: ${formatDate(task.dueDate)}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <button class="history-note-btn ${task.note ? 'has-note' : ''}" onclick="openHistoryNoteModal(${task.id})">
+                            ${task.note ? '✏️ Modifica Nota' : '📝 Aggiungi Nota'}
+                        </button>
+                    </div>
+                    ${task.note ? `
+                        <div class="history-note">
+                            <div class="history-note-actions">
+                                <button class="history-note-action" onclick="openHistoryNoteModal(${task.id})" title="Modifica nota">
+                                    ✏️
+                                </button>
+                                <button class="history-note-action delete" onclick="deleteHistoryNote(${task.id})" title="Elimina nota">
+                                    🗑️
+                                </button>
+                            </div>
+                            <div class="history-note-content">${task.note}</div>
+                            <div class="history-note-date">Nota aggiunta il ${formatDate(task.noteDate)}</div>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // History notes functions
+        function openHistoryNoteModal(taskId) {
+            const task = completedTasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            editingHistoryNoteTaskId = taskId;
+            
+            const modal = document.getElementById('history-note-modal');
+            const title = document.getElementById('history-note-modal-title');
+            const textarea = document.getElementById('history-note-text');
+            const saveBtn = document.getElementById('history-note-save-btn');
+            
+            if (task.note) {
+                title.textContent = '✏️ Modifica Nota';
+                textarea.value = task.note;
+                saveBtn.textContent = '💾 Salva Modifiche';
+            } else {
+                title.textContent = '📝 Aggiungi Nota';
+                textarea.value = '';
+                saveBtn.textContent = '💾 Salva Nota';
+            }
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => textarea.focus(), 100);
+        }
+
+        function closeHistoryNoteModal() {
+            document.getElementById('history-note-modal').style.display = 'none';
+            document.body.style.overflow = '';
+            editingHistoryNoteTaskId = null;
+        }
+
+        function closeHistoryNoteModalOnBackground(event) {
+            if (event.target === event.currentTarget) {
+                closeHistoryNoteModal();
+            }
+        }
+
+        function saveHistoryNote() {
+            const noteText = document.getElementById('history-note-text').value.trim();
+            
+            if (!noteText) {
+                alert('⚠️ Inserisci il testo della nota!');
+                return;
+            }
+            
+            const task = completedTasks.find(t => t.id === editingHistoryNoteTaskId);
+            if (task) {
+                const isNewNote = !task.note;
+                task.note = noteText;
+                task.noteDate = isNewNote ? new Date().toISOString() : (task.noteDate || new Date().toISOString());
+                
+                saveData();
+                closeHistoryNoteModal();
+                renderHistory();
+                showSuccessMessage(isNewNote ? 'Nota aggiunta!' : 'Nota modificata!');
+            }
+        }
+
+        function deleteHistoryNote(taskId) {
+            if (confirm('🗑️ Sei sicuro di voler eliminare questa nota?')) {
+                const task = completedTasks.find(t => t.id === taskId);
+                if (task) {
+                    delete task.note;
+                    delete task.noteDate;
+                    
+                    saveData();
+                    renderHistory();
+                    showSuccessMessage('Nota eliminata!');
+                }
+            }
+        }
+
+        // Notes functions with edit and delete functionality
+        function saveNote() {
+            const noteText = document.getElementById('notes-text').value.trim();
+            if (!noteText) {
+                alert('⚠️ Scrivi qualcosa prima di salvare!');
+                return;
+            }
+            
+            const newNote = {
+                id: Date.now(),
+                text: noteText,
+                date: new Date().toISOString()
+            };
+            
+            notes.unshift(newNote);
+            saveData();
+            document.getElementById('notes-text').value = '';
+            renderNotes();
+            showSuccessMessage('Nota salvata!');
+        }
+
+        function renderNotes() {
+            const container = document.getElementById('saved-notes');
+            
+            if (notes.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            container.innerHTML = '<h4 class="section-title">📋 Note Salvate</h4>' + 
+                notes.map(note => `
+                    <div class="notes-item">
+                        <div class="notes-actions">
+                            <button class="notes-action-btn edit" onclick="editNote(${note.id})" title="Modifica nota">
+                                ✏️
+                            </button>
+                            <button class="notes-action-btn delete" onclick="deleteNote(${note.id})" title="Elimina nota">
+                                🗑️
+                            </button>
+                        </div>
+                        <div class="notes-date">
+                            ${formatDateTime(note.date)}
+                        </div>
+                        <div class="notes-text">${note.text}</div>
+                    </div>
+                `).join('');
+        }
+
+        function editNote(noteId) {
+            const note = notes.find(n => n.id === noteId);
+            if (!note) return;
+            
+            editingNoteId = noteId;
+            document.getElementById('edit-note-text').value = note.text;
+            document.getElementById('edit-note-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => document.getElementById('edit-note-text').focus(), 100);
+        }
+
+        function closeEditNoteModal() {
+            document.getElementById('edit-note-modal').style.display = 'none';
+            document.body.style.overflow = '';
+            editingNoteId = null;
+        }
+
+        function closeEditNoteModalOnBackground(event) {
+            if (event.target === event.currentTarget) {
+                closeEditNoteModal();
+            }
+        }
+
+        function saveEditedNote() {
+            const noteText = document.getElementById('edit-note-text').value.trim();
+            
+            if (!noteText) {
+                alert('⚠️ Inserisci il testo della nota!');
+                return;
+            }
+            
+            const note = notes.find(n => n.id === editingNoteId);
+            if (note) {
+                note.text = noteText;
+                note.date = new Date().toISOString();
+                
+                saveData();
+                closeEditNoteModal();
+                renderNotes();
+                showSuccessMessage('Nota modificata!');
+            }
+        }
+
+        function deleteNote(noteId) {
+            if (confirm('🗑️ Sei sicuro di voler eliminare questa nota?')) {
+                notes = notes.filter(n => n.id !== noteId);
+                saveData();
+                renderNotes();
+                showSuccessMessage('Nota eliminata!');
+            }
+        }
+
+        // PDF Export functions
+        function exportTasks(taskType) {
+            const button = event?.target || document.querySelector('.export-btn');
+            const originalText = button.innerHTML;
+            button.innerHTML = '⏳ Generando...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf || {};
+                    if (!jsPDF) {
+                        exportTasksAsText(taskType);
+                        return;
+                    }
+                    
+                    const doc = new jsPDF();
+                    const pageWidth = doc.internal.pageSize.width;
+                    const margin = 20;
+                    let yPosition = margin;
+                    
+                    // Header
+                    doc.setFontSize(18);
+                    doc.setFont(undefined, 'bold');
+                    const title = taskType === 'todo' ? 'Attività Da Fare' : 'Attività Con Scadenza';
+                    doc.text(title, margin, yPosition);
+                    yPosition += 15;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`Generato il: ${new Date().toLocaleString('it-IT')}`, margin, yPosition);
+                    yPosition += 20;
+                    
+                    const tasksToExport = taskType === 'todo' 
+                        ? todos.filter(todo => !todo.completed) 
+                        : deadlineTasks.filter(task => !task.completed);
+                    
+                    if (tasksToExport.length === 0) {
+                        doc.text('Nessuna attività presente.', margin, yPosition);
+                    } else {
+                        tasksToExport.forEach((task, index) => {
+                            if (yPosition > 250) {
+                                doc.addPage();
+                                yPosition = margin;
+                            }
+                            
+                            doc.setFontSize(12);
+                            doc.setFont(undefined, 'bold');
+                            doc.text(`${index + 1}. ${task.title}`, margin, yPosition);
+                            yPosition += 8;
+                            
+                            doc.setFontSize(10);
+                            doc.setFont(undefined, 'normal');
+                            if (task.description) {
+                                const lines = doc.splitTextToSize(task.description, pageWidth - 2 * margin);
+                                doc.text(lines, margin + 5, yPosition);
+                                yPosition += lines.length * 5;
+                            }
+                            
+                            if (taskType === 'deadline') {
+                                yPosition += 3;
+                                doc.text(`Inizio: ${formatDate(task.startDate)}`, margin + 5, yPosition);
+                                yPosition += 5;
+                                doc.text(`Scadenza: ${formatDate(task.dueDate)}`, margin + 5, yPosition);
+                                yPosition += 5;
+                                
+                                const daysUntil = getDaysUntilDeadline(task.dueDate);
+                                let status = '';
+                                if (daysUntil < 0) {
+                                    status = `Scaduta ${Math.abs(daysUntil)} giorni fa`;
+                                } else if (daysUntil === 0) {
+                                    status = 'Scade oggi!';
+                                } else {
+                                    status = `Scade in ${daysUntil} giorni`;
+                                }
+                                doc.text(`Stato: ${status}`, margin + 5, yPosition);
+                                yPosition += 5;
+                            }
+                            
+                            yPosition += 3;
+                            doc.setFontSize(8);
+                            doc.text(`Creata: ${formatDateTime(task.createdAt)}`, margin + 5, yPosition);
+                            yPosition += 15;
+                        });
+                    }
+                    
+                    doc.save(`OfficeFlow_${title.replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.pdf`);
+                    showSuccessMessage('PDF generato con successo!');
+                    
+                } catch (error) {
+                    console.error('Errore generazione PDF:', error);
+                    exportTasksAsText(taskType);
+                } finally {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            }, 500);
+        }
+
+        function exportTasksAsText(taskType) {
+            const title = taskType === 'todo' ? 'Attività Da Fare' : 'Attività Con Scadenza';
+            const tasksToExport = taskType === 'todo' 
+                ? todos.filter(todo => !todo.completed) 
+                : deadlineTasks.filter(task => !task.completed);
+            
+            let content = `${title}\n`;
+            content += `Generato il: ${new Date().toLocaleString('it-IT')}\n`;
+            content += '='.repeat(50) + '\n\n';
+            
+            if (tasksToExport.length === 0) {
+                content += 'Nessuna attività presente.\n';
+            } else {
+                tasksToExport.forEach((task, index) => {
+                    content += `${index + 1}. ${task.title}\n`;
+                    content += `   Descrizione: ${task.description}\n`;
+                    
+                    if (taskType === 'deadline') {
+                        content += `   Inizio: ${formatDate(task.startDate)}\n`;
+                        content += `   Scadenza: ${formatDate(task.dueDate)}\n`;
+                        
+                        const daysUntil = getDaysUntilDeadline(task.dueDate);
+                        let status = '';
+                        if (daysUntil < 0) {
+                            status = `Scaduta ${Math.abs(daysUntil)} giorni fa`;
+                        } else if (daysUntil === 0) {
+                            status = 'Scade oggi!';
+                        } else {
+                            status = `Scade in ${daysUntil} giorni`;
+                        }
+                        content += `   Stato: ${status}\n`;
+                    }
+                    
+                    content += `   Creata: ${formatDateTime(task.createdAt)}\n`;
+                    content += '\n';
+                });
+            }
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `OfficeFlow_${title.replace(' ', '_')}_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            showSuccessMessage('File di testo generato con successo!');
+        }
+
+        function exportHistory() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '⏳ Generando...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                try {
+                    const { jsPDF } = window.jspdf || {};
+                    if (!jsPDF) {
+                        exportHistoryAsText();
+                        return;
+                    }
+                    
+                    const doc = new jsPDF();
+                    const pageWidth = doc.internal.pageSize.width;
+                    const margin = 20;
+                    let yPosition = margin;
+                    
+                    doc.setFontSize(18);
+                    doc.setFont(undefined, 'bold');
+                    doc.text('Cronologia Attività Completate', margin, yPosition);
+                    yPosition += 15;
+                    
+                    doc.setFontSize(10);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`Generato il: ${new Date().toLocaleString('it-IT')}`, margin, yPosition);
+                    yPosition += 20;
+                    
+                    const sortedTasks = [...completedTasks].sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+                    
+                    if (sortedTasks.length === 0) {
+                        doc.text('Nessuna attività completata.', margin, yPosition);
+                    } else {
+                        sortedTasks.forEach((task, index) => {
+                            if (yPosition > 220) {
+                                doc.addPage();
+                                yPosition = margin;
+                            }
+                            
+                            doc.setFontSize(12);
+                            doc.setFont(undefined, 'bold');
+                            doc.text(`${index + 1}. ${task.title}`, margin, yPosition);
+                            yPosition += 8;
+                            
+                            doc.setFontSize(10);
+                            doc.setFont(undefined, 'normal');
+                            if (task.description) {
+                                const lines = doc.splitTextToSize(task.description, pageWidth - 2 * margin);
+                                doc.text(lines, margin + 5, yPosition);
+                                yPosition += lines.length * 5;
+                            }
+                            
+                            yPosition += 3;
+                            doc.text(`Completata il: ${formatDate(task.completedAt)}`, margin + 5, yPosition);
+                            yPosition += 5;
+                            
+                            if (task.type === 'deadline') {
+                                doc.text(`Scadenza era: ${formatDate(task.dueDate)}`, margin + 5, yPosition);
+                                yPosition += 5;
+                            }
+                            
+                            if (task.note) {
+                                yPosition += 3;
+                                doc.setFont(undefined, 'bold');
+                                doc.text('Nota:', margin + 5, yPosition);
+                                yPosition += 5;
+                                doc.setFont(undefined, 'normal');
+                                const noteLines = doc.splitTextToSize(task.note, pageWidth - 2 * margin - 10);
+                                doc.text(noteLines, margin + 10, yPosition);
+                                yPosition += noteLines.length * 5;
+                                doc.setFontSize(8);
+                                doc.text(`Nota aggiunta il: ${formatDate(task.noteDate)}`, margin + 10, yPosition);
+                                yPosition += 5;
+                                doc.setFontSize(10);
+                            }
+                            
+                            yPosition += 15;
+                        });
+                    }
+                    
+                    doc.save(`OfficeFlow_Cronologia_${new Date().toISOString().split('T')[0]}.pdf`);
+                    showSuccessMessage('PDF cronologia generato con successo!');
+                    
+                } catch (error) {
+                    exportHistoryAsText();
+                } finally {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            }, 500);
+        }
+
+        function exportHistoryAsText() {
+            let content = 'Cronologia Attività Completate\n';
+            content += `Generato il: ${new Date().toLocaleString('it-IT')}\n`;
+            content += '='.repeat(50) + '\n\n';
+            
+            const sortedTasks = [...completedTasks].sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+            
+            if (sortedTasks.length === 0) {
+                content += 'Nessuna attività completata.\n';
+            } else {
+                sortedTasks.forEach((task, index) => {
+                    const taskType = task.type === 'deadline' ? '📅' : '⏰';
+                    content += `${index + 1}. ${taskType} ${task.title}\n`;
+                    content += `   Descrizione: ${task.description}\n`;
+                    content += `   Completata il: ${formatDate(task.completedAt)}\n`;
+                    
+                    if (task.type === 'deadline') {
+                        content += `   Scadenza era: ${formatDate(task.dueDate)}\n`;
+                    }
+                    
+                    if (task.note) {
+                        content += `   Nota: ${task.note}\n`;
+                        content += `   Nota aggiunta il: ${formatDate(task.noteDate)}\n`;
+                    }
+                    
+                    content += '\n';
+                });
+            }
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `OfficeFlow_Cronologia_${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            
+            showSuccessMessage('File cronologia generato con successo!');
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📋 Initializing OfficeFlow ...');
+            
+            // Load jsPDF for PDF export functionality
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+            script.onload = function() {
+                console.log('📄 jsPDF loaded successfully');
+            };
+            script.onerror = function() {
+                console.warn('📄 jsPDF failed to load - will use text export fallback');
+            };
+            document.head.appendChild(script);
+            
+            renderCalendar();
+            console.log('🚀 OfficeFlow initialized successfully!');
+        });
+
+        // Event listeners for closing popups on outside click
+        document.addEventListener('click', function(event) {
+            const taskDetailPopup = document.getElementById('task-detail-popup');
+            if (taskDetailPopup.classList.contains('show') && event.target === taskDetailPopup) {
+                closeTaskDetailPopup();
+            }
+        });
+
+        // Expose functions to global scope
+        window.showTab = showTab;
+        window.showTasksSubtab = showTasksSubtab;
+        window.changeMonth = changeMonth;
+        window.showDayPopup = showDayPopup;
+        window.closeDayPopup = closeDayPopup;
+        window.showTaskDetailPopup = showTaskDetailPopup;
+        window.closeTaskDetailPopup = closeTaskDetailPopup;
+        window.openAddTodoModal = openAddTodoModal;
+        window.closeTodoModal = closeTodoModal;
+        window.closeTodoModalOnBackground = closeTodoModalOnBackground;
+        window.saveTodoTask = saveTodoTask;
+        window.editTodoTask = editTodoTask;
+        window.completeTodoTask = completeTodoTask;
+        window.deleteTodoTask = deleteTodoTask;
+        window.openAddDeadlineModal = openAddDeadlineModal;
+        window.closeDeadlineModal = closeDeadlineModal;
+        window.closeDeadlineModalOnBackground = closeDeadlineModalOnBackground;
+        window.saveDeadlineTask = saveDeadlineTask;
+        window.editDeadlineTask = editDeadlineTask;
+        window.completeDeadlineTask = completeDeadlineTask;
+        window.deleteDeadlineTask = deleteDeadlineTask;
+        window.saveNote = saveNote;
+        window.editNote = editNote;
+        window.closeEditNoteModal = closeEditNoteModal;
+        window.closeEditNoteModalOnBackground = closeEditNoteModalOnBackground;
+        window.saveEditedNote = saveEditedNote;
+        window.deleteNote = deleteNote;
+        window.openHistoryNoteModal = openHistoryNoteModal;
+        window.closeHistoryNoteModal = closeHistoryNoteModal;
+        window.closeHistoryNoteModalOnBackground = closeHistoryNoteModalOnBackground;
+        window.saveHistoryNote = saveHistoryNote;
+        window.deleteHistoryNote = deleteHistoryNote;
+        window.exportTasks = exportTasks;
+        window.exportHistory = exportHistory;
+    </script>
+</body>
+</html>
