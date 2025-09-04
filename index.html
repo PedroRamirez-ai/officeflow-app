@@ -1676,6 +1676,20 @@
         let auth = null;
         let db = null;
 
+        // 📧 WHITELIST EMAIL AUTORIZZATE
+        const authorizedEmails = [
+            'francesco.iervolino@tramellocassinari.it',
+            'isabella.casati@tramellocassinari.it', 
+            'francesco.ierv1@gmail.com',
+            'alessandraciccarelli7@gmail.com',
+            '_______@___.____', // Per test
+            // Aggiungi qui le email autorizzate
+        ];
+
+        // Funzione per verificare email autorizzata
+        function isEmailAuthorized(email) {
+            return authorizedEmails.includes(email.toLowerCase());
+        }
         // ========== FIREBASE AUTH FUNCTIONS ==========
         
         // Initialize Firebase
@@ -1753,63 +1767,120 @@
         }
 
         function doLogin() {
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
+    const email = document.getElementById('login-email').value.trim().toLowerCase();
+    const password = document.getElementById('login-password').value;
 
-            if (!email || !password) {
-                showAuthError('Inserisci email e password');
-                return;
+    if (!email || !password) {
+        showAuthError('Inserisci email e password');
+        return;
+    }
+
+    setAuthLoading('login-btn', true);
+
+    auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+            console.log('✅ Login success');
+            showAuthError(''); // Pulisci errori
+        })
+        .catch((error) => {
+            console.error('❌ Login error:', error);
+            
+            // 🎯 MESSAGGI DI ERRORE MIGLIORATI
+            let errorMessage = '';
+            switch (error.code) {
+                case 'auth/user-not-found':
+                    errorMessage = '👤 Utente non trovato. Verifica l\'email o registrati.';
+                    break;
+                case 'auth/wrong-password':
+                    errorMessage = '🔑 Password errata. Riprova.';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = '❌ Email non valida. Controlla il formato.';
+                    break;
+                case 'auth/user-disabled':
+                    errorMessage = '🚫 Account disabilitato. Contatta l\'amministratore.';
+                    break;
+                case 'auth/too-many-requests':
+                    errorMessage = '⏰ Troppi tentativi. Riprova tra qualche minuto.';
+                    break;
+                case 'auth/network-request-failed':
+                    errorMessage = '🌐 Errore di connessione. Controlla la tua rete.';
+                    break;
+                default:
+                    errorMessage = `Errore: ${error.message}`;
             }
-
-            setAuthLoading('login-btn', true);
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    console.log('✅ Login success');
-                })
-                .catch((error) => {
-                    console.error('❌ Login error:', error);
-                    showAuthError('Errore: ' + error.message);
-                })
-                .finally(() => {
-                    setAuthLoading('login-btn', false);
-                });
-        }
+            showAuthError(errorMessage);
+        })
+        .finally(() => {
+            setAuthLoading('login-btn', false);
+        });
+     }
 
         function doRegister() {
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-password-confirm').value;
+    const email = document.getElementById('register-email').value.trim().toLowerCase();
+    const password = document.getElementById('register-password').value;
+    const confirmPassword = document.getElementById('register-password-confirm').value;
 
-            if (!email || !password || !confirmPassword) {
-                showAuthError('Compila tutti i campi');
-                return;
+    // Controllo campi vuoti
+    if (!email || !password || !confirmPassword) {
+        showAuthError('Compila tutti i campi');
+        return;
+    }
+
+    // 🔐 CONTROLLO EMAIL AUTORIZZATA
+    if (!isEmailAuthorized(email)) {
+        showAuthError('⛔ Email non autorizzata. Contatta l\'amministratore per richiedere l\'accesso.');
+        return;
+    }
+
+    // Controllo lunghezza password
+    if (password.length < 6) {
+        showAuthError('Password troppo corta (minimo 6 caratteri)');
+        return;
+    }
+
+    // Controllo password coincidenti
+    if (password !== confirmPassword) {
+        showAuthError('Le password non coincidono');
+        return;
+    }
+
+    setAuthLoading('register-btn', true);
+
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+            console.log('✅ Register success');
+            showAuthError(''); // Pulisci errori
+            alert('✅ Registrazione completata con successo!');
+            switchAuthTab('login'); // Torna al login
+        })
+        .catch((error) => {
+            console.error('❌ Register error:', error);
+            
+            // 🎯 MESSAGGI DI ERRORE MIGLIORATI
+            let errorMessage = '';
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = '📧 Questa email è già registrata. Prova a fare login.';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = '❌ Email non valida. Controlla il formato.';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = '🔒 Password troppo debole. Usa almeno 6 caratteri.';
+                    break;
+                case 'auth/network-request-failed':
+                    errorMessage = '🌐 Errore di connessione. Controlla la tua rete.';
+                    break;
+                default:
+                    errorMessage = `Errore: ${error.message}`;
             }
-
-            if (password.length < 6) {
-                showAuthError('Password troppo corta (minimo 6 caratteri)');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showAuthError('Le password non coincidono');
-                return;
-            }
-
-            setAuthLoading('register-btn', true);
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    console.log('✅ Register success');
-                })
-                .catch((error) => {
-                    console.error('❌ Register error:', error);
-                    showAuthError('Errore: ' + error.message);
-                })
-                .finally(() => {
-                    setAuthLoading('register-btn', false);
-                });
-        }
+            showAuthError(errorMessage);
+        })
+        .finally(() => {
+            setAuthLoading('register-btn', false);
+        });
+    }
 
         function doLogout() {
             if (confirm('Sei sicuro di voler uscire?')) {
