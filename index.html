@@ -27,6 +27,176 @@
             overflow-x: hidden;
         }
 
+        /* AUTH STYLES */
+        .auth-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .auth-form {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .auth-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .auth-subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 30px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #6b7280;
+            transition: all 0.2s ease;
+        }
+
+        .auth-tab.active {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+
+        .auth-form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .auth-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #f3f4f6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-error {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            padding: 10px;
+            background: #fef2f2;
+            border-radius: 6px;
+            border-left: 4px solid #dc2626;
+        }
+
+        .auth-loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ffffff40;
+            border-top: 2px solid #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* USER INFO */
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* EXISTING STYLES */
         .container {
             max-width: 100%;
             margin: 0 auto;
@@ -1193,253 +1363,646 @@
                 margin: 10px;
                 width: calc(100% - 20px);
             }
+            
+            .auth-form {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Firebase sync indicator */
+        .sync-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sync-indicator.show {
+            opacity: 1;
+        }
+
+        .sync-indicator.syncing {
+            color: #f59e0b;
+        }
+
+        .sync-indicator.error {
+            color: #dc2626;
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .sync-dot.pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
     </style>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB0cB4SoPlUOaN5RfXPnVca7nJirx51qNM",
+            authDomain: "officeflow-76837.firebaseapp.com",
+            projectId: "officeflow-76837",
+            storageBucket: "officeflow-76837.firebasestorage.app",
+            messagingSenderId: "1041102307856",
+            appId: "1:1041102307856:web:c2cc37d2468e7a25218095",
+            measurementId: "G-1X1ZPQMZVR"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Export to global scope for use in other scripts
+        window.firebase = { auth, db, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, doc, setDoc, getDoc, onSnapshot, collection, addDoc, updateDoc, deleteDoc, query, where, orderBy, serverTimestamp };
+    </script>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📋 OfficeFlow</h1>
-            <p>Gestione Attività di Segreteria</p>
-        </div>
+    <!-- Sync Indicator -->
+    <div id="sync-indicator" class="sync-indicator">
+        <div class="sync-dot"></div>
+        <span id="sync-text">Sincronizzato</span>
+    </div>
 
-        <div class="content">
-            <!-- Calendario Tab -->
-            <div id="calendar" class="tab-content active">
-                <div class="calendar-container">
-                    <div class="calendar-header">
-                        <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
-                        <div class="calendar-title" id="calendar-title"></div>
-                        <button class="calendar-nav" onclick="changeMonth(1)">›</button>
-                    </div>
-                    <div class="calendar-grid" id="calendar-grid"></div>
-                </div>
+    <!-- Authentication Screen -->
+    <div id="auth-container" class="auth-container">
+        <div class="auth-form">
+            <div class="auth-title">🔋 OfficeFlow</div>
+            <div class="auth-subtitle">Gestione Attività di Segreteria</div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login', this)">Accedi</div>
+                <div class="auth-tab" onclick="switchAuthTab('register', this)">Registrati</div>
             </div>
 
-            <!-- Tasks Tab -->
-            <div id="tasks" class="tab-content">
-                <div class="tasks-header">
-                    <div class="tasks-subtab active" onclick="showTasksSubtab('todo', this)">
-                        ⏰ Da Fare
-                    </div>
-                    <div class="tasks-subtab" onclick="showTasksSubtab('deadline', this)">
-                        📅 Scadenze
-                    </div>
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form-content">
+                <div class="auth-form-group">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" class="auth-input" placeholder="tua@email.com" required>
                 </div>
+                <div class="auth-form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" class="auth-input" placeholder="Password" required>
+                </div>
+                <button id="login-btn" class="auth-btn" onclick="handleLogin()">
+                    Accedi
+                </button>
+            </div>
 
-                <!-- Attività Da Fare -->
-                <div id="todo-content" class="tasks-content active">
-                    <div class="tasks-section">
-                        <div class="section-title">
-                            <div class="section-title-left">
-                                <span>⏰ Attività Da Fare</span>
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="export-btn" onclick="exportTasks('todo')" title="Esporta attività da fare">
-                                    📄 Export PDF
-                                </button>
-                                <button class="add-task-btn" onclick="openAddTodoModal()" title="Aggiungi attività da fare">
-                                    +
-                                </button>
-                            </div>
+            <!-- Register Form -->
+            <div id="register-form" class="auth-form-content" style="display: none;">
+                <div class="auth-form-group">
+                    <label for="register-email">Email:</label>
+                    <input type="email" id="register-email" class="auth-input" placeholder="tua@email.com" required>
+                </div>
+                <div class="auth-form-group">
+                    <label for="register-password">Password:</label>
+                    <input type="password" id="register-password" class="auth-input" placeholder="Minimo 6 caratteri" required>
+                </div>
+                <div class="auth-form-group">
+                    <label for="register-password-confirm">Conferma Password:</label>
+                    <input type="password" id="register-password-confirm" class="auth-input" placeholder="Ripeti password" required>
+                </div>
+                <button id="register-btn" class="auth-btn" onclick="handleRegister()">
+                    Registrati
+                </button>
+            </div>
+
+            <div id="auth-error" class="auth-error" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" style="display: none;">
+        <div class="container">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="user-email" id="user-email"></div>
+                <button class="logout-btn" onclick="handleLogout()">Esci</button>
+            </div>
+
+            <div class="header">
+                <h1>🔋 OfficeFlow</h1>
+                <p>Gestione Attività di Segreteria</p>
+            </div>
+
+            <div class="content">
+                <!-- Calendario Tab -->
+                <div id="calendar" class="tab-content active">
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
+                            <div class="calendar-title" id="calendar-title"></div>
+                            <button class="calendar-nav" onclick="changeMonth(1)">›</button>
                         </div>
-                        <div id="todo-tasks"></div>
+                        <div class="calendar-grid" id="calendar-grid"></div>
                     </div>
                 </div>
 
-                <!-- Attività Con Scadenza -->
-                <div id="deadline-content" class="tasks-content">
-                    <div class="tasks-section">
-                        <div class="section-title">
-                            <div class="section-title-left">
-                                <span>📅 Attività Con Scadenza</span>
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="export-btn" onclick="exportTasks('deadline')" title="Esporta attività con scadenza">
-                                    📄 Export PDF
-                                </button>
-                                <button class="add-task-btn" onclick="openAddDeadlineModal()" title="Aggiungi attività con scadenza">
-                                    +
-                                </button>
-                            </div>
+                <!-- Tasks Tab -->
+                <div id="tasks" class="tab-content">
+                    <div class="tasks-header">
+                        <div class="tasks-subtab active" onclick="showTasksSubtab('todo', this)">
+                            ⏰ Da Fare
                         </div>
-                        <div id="deadline-tasks"></div>
+                        <div class="tasks-subtab" onclick="showTasksSubtab('deadline', this)">
+                            📅 Scadenze
+                        </div>
+                    </div>
+
+                    <!-- Attività Da Fare -->
+                    <div id="todo-content" class="tasks-content active">
+                        <div class="tasks-section">
+                            <div class="section-title">
+                                <div class="section-title-left">
+                                    <span>⏰ Attività Da Fare</span>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="export-btn" onclick="exportTasks('todo')" title="Esporta attività da fare">
+                                        📄 Export PDF
+                                    </button>
+                                    <button class="add-task-btn" onclick="openAddTodoModal()" title="Aggiungi attività da fare">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="todo-tasks"></div>
+                        </div>
+                    </div>
+
+                    <!-- Attività Con Scadenza -->
+                    <div id="deadline-content" class="tasks-content">
+                        <div class="tasks-section">
+                            <div class="section-title">
+                                <div class="section-title-left">
+                                    <span>📅 Attività Con Scadenza</span>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="export-btn" onclick="exportTasks('deadline')" title="Esporta attività con scadenza">
+                                        📄 Export PDF
+                                    </button>
+                                    <button class="add-task-btn" onclick="openAddDeadlineModal()" title="Aggiungi attività con scadenza">
+                                        +
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="deadline-tasks"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div id="history" class="tab-content">
+                    <div class="history-header">
+                        <h3 class="section-title">✅ Attività Completate</h3>
+                        <button class="export-btn" onclick="exportHistory()" title="Esporta cronologia">
+                            📄 Export PDF
+                        </button>
+                    </div>
+                    <div id="history-list"></div>
+                </div>
+
+                <!-- Notes Tab -->
+                <div id="notes" class="tab-content">
+                    <div class="notes-section">
+                        <h3 class="section-title">📝 Note</h3>
+                        <textarea id="notes-text" class="notes-input" placeholder="Scrivi qui le tue note..."></textarea>
+                        <button class="btn btn-primary" onclick="saveNote()">💾 Salva Nota</button>
+                        <div id="saved-notes" style="margin-top: 20px;"></div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- History Tab -->
-            <div id="history" class="tab-content">
-                <div class="history-header">
-                    <h3 class="section-title">✅ Attività Completate</h3>
-                    <button class="export-btn" onclick="exportHistory()" title="Esporta cronologia">
-                        📄 Export PDF
-                    </button>
+        <!-- Day Popup -->
+        <div id="day-popup" class="day-popup">
+            <div class="day-popup-header">
+                <span id="day-popup-date"></span>
+                <div class="day-popup-close" onclick="closeDayPopup()">×</div>
+            </div>
+            <div id="day-popup-content"></div>
+        </div>
+
+        <!-- Task Detail Popup -->
+        <div id="task-detail-popup" class="task-detail-popup">
+            <div class="task-detail-content">
+                <div class="task-detail-header">
+                    <div class="task-detail-title" id="task-detail-title"></div>
+                    <div class="task-detail-close" onclick="closeTaskDetailPopup()">×</div>
                 </div>
-                <div id="history-list"></div>
+                <div class="task-detail-description" id="task-detail-description"></div>
+                <div class="task-detail-meta" id="task-detail-meta"></div>
+                <div class="task-detail-actions" id="task-detail-actions"></div>
             </div>
+        </div>
 
-            <!-- Notes Tab -->
-            <div id="notes" class="tab-content">
-                <div class="notes-section">
-                    <h3 class="section-title">📝 Note</h3>
-                    <textarea id="notes-text" class="notes-input" placeholder="Scrivi qui le tue note..."></textarea>
-                    <button class="btn btn-primary" onclick="saveNote()">💾 Salva Nota</button>
-                    <div id="saved-notes" style="margin-top: 20px;"></div>
+        <!-- Bottom Navigation -->
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('calendar', this)">
+                <div class="tab-icon">📅</div>
+                <div>Calendario</div>
+            </div>
+            <div class="tab" onclick="showTab('tasks', this)">
+                <div class="tab-icon">📋</div>
+                <div>Attività</div>
+            </div>
+            <div class="tab" onclick="showTab('history', this)">
+                <div class="tab-icon">✅</div>
+                <div>Storia</div>
+            </div>
+            <div class="tab" onclick="showTab('notes', this)">
+                <div class="tab-icon">📝</div>
+                <div>Note</div>
+            </div>
+        </div>
+
+        <!-- Modal Attività Da Fare -->
+        <div id="todo-modal" class="modal" onclick="closeTodoModalOnBackground(event)">
+            <div class="modal-content">
+                <span class="close" onclick="closeTodoModal()">&times;</span>
+                <h3>⏰ Nuova Attività Da Fare</h3>
+                
+                <div class="form-group">
+                    <label>Titolo:</label>
+                    <input type="text" id="todo-title" placeholder="es. Controllare email">
+                </div>
+                <div class="form-group">
+                    <label>Descrizione:</label>
+                    <textarea id="todo-description" placeholder="Descrizione dettagliata dell'attività..."></textarea>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button class="btn btn-cancel" onclick="closeTodoModal()">❌ Annulla</button>
+                    <button class="btn" onclick="saveTodoTask()">➕ Aggiungi</button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Day Popup -->
-    <div id="day-popup" class="day-popup">
-        <div class="day-popup-header">
-            <span id="day-popup-date"></span>
-            <div class="day-popup-close" onclick="closeDayPopup()">×</div>
+        <!-- Modal Attività Con Scadenza -->
+        <div id="deadline-modal" class="modal" onclick="closeDeadlineModalOnBackground(event)">
+            <div class="modal-content">
+                <span class="close" onclick="closeDeadlineModal()">&times;</span>
+                <h3>📅 Nuova Attività Con Scadenza</h3>
+                
+                <div class="form-group">
+                    <label>Titolo:</label>
+                    <input type="text" id="deadline-title" placeholder="es. Preparare report mensile">
+                </div>
+                <div class="form-group">
+                    <label>Descrizione:</label>
+                    <textarea id="deadline-description" placeholder="Descrizione dettagliata dell'attività..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Data di inizio:</label>
+                    <input type="date" id="deadline-start-date">
+                </div>
+                <div class="form-group">
+                    <label>Data di scadenza:</label>
+                    <input type="date" id="deadline-due-date">
+                </div>
+                
+                <div class="modal-buttons">
+                    <button class="btn btn-cancel" onclick="closeDeadlineModal()">❌ Annulla</button>
+                    <button class="btn" onclick="saveDeadlineTask()">➕ Aggiungi</button>
+                </div>
+            </div>
         </div>
-        <div id="day-popup-content"></div>
-    </div>
 
-    <!-- Task Detail Popup -->
-    <div id="task-detail-popup" class="task-detail-popup">
-        <div class="task-detail-content">
-            <div class="task-detail-header">
-                <div class="task-detail-title" id="task-detail-title"></div>
-                <div class="task-detail-close" onclick="closeTaskDetailPopup()">×</div>
+        <!-- Modal Note Storia -->
+        <div id="history-note-modal" class="modal" onclick="closeHistoryNoteModalOnBackground(event)">
+            <div class="modal-content">
+                <span class="close" onclick="closeHistoryNoteModal()">&times;</span>
+                <h3 id="history-note-modal-title">📝 Aggiungi Nota</h3>
+                
+                <div class="form-group">
+                    <label>Nota:</label>
+                    <textarea id="history-note-text" placeholder="Scrivi qui la nota per questa attività completata..."></textarea>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button class="btn btn-cancel" onclick="closeHistoryNoteModal()">❌ Annulla</button>
+                    <button class="btn" id="history-note-save-btn" onclick="saveHistoryNote()">💾 Salva Nota</button>
+                </div>
             </div>
-            <div class="task-detail-description" id="task-detail-description"></div>
-            <div class="task-detail-meta" id="task-detail-meta"></div>
-            <div class="task-detail-actions" id="task-detail-actions"></div>
         </div>
-    </div>
 
-    <!-- Bottom Navigation -->
-    <div class="tabs">
-        <div class="tab active" onclick="showTab('calendar', this)">
-            <div class="tab-icon">📅</div>
-            <div>Calendario</div>
-        </div>
-        <div class="tab" onclick="showTab('tasks', this)">
-            <div class="tab-icon">📋</div>
-            <div>Attività</div>
-        </div>
-        <div class="tab" onclick="showTab('history', this)">
-            <div class="tab-icon">✅</div>
-            <div>Storia</div>
-        </div>
-        <div class="tab" onclick="showTab('notes', this)">
-            <div class="tab-icon">📝</div>
-            <div>Note</div>
-        </div>
-    </div>
-
-    <!-- Modal Attività Da Fare -->
-    <div id="todo-modal" class="modal" onclick="closeTodoModalOnBackground(event)">
-        <div class="modal-content">
-            <span class="close" onclick="closeTodoModal()">&times;</span>
-            <h3>⏰ Nuova Attività Da Fare</h3>
-            
-            <div class="form-group">
-                <label>Titolo:</label>
-                <input type="text" id="todo-title" placeholder="es. Controllare email">
-            </div>
-            <div class="form-group">
-                <label>Descrizione:</label>
-                <textarea id="todo-description" placeholder="Descrizione dettagliata dell'attività..."></textarea>
-            </div>
-            
-            <div class="modal-buttons">
-                <button class="btn btn-cancel" onclick="closeTodoModal()">❌ Annulla</button>
-                <button class="btn" onclick="saveTodoTask()">➕ Aggiungi</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Attività Con Scadenza -->
-    <div id="deadline-modal" class="modal" onclick="closeDeadlineModalOnBackground(event)">
-        <div class="modal-content">
-            <span class="close" onclick="closeDeadlineModal()">&times;</span>
-            <h3>📅 Nuova Attività Con Scadenza</h3>
-            
-            <div class="form-group">
-                <label>Titolo:</label>
-                <input type="text" id="deadline-title" placeholder="es. Preparare report mensile">
-            </div>
-            <div class="form-group">
-                <label>Descrizione:</label>
-                <textarea id="deadline-description" placeholder="Descrizione dettagliata dell'attività..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Data di inizio:</label>
-                <input type="date" id="deadline-start-date">
-            </div>
-            <div class="form-group">
-                <label>Data di scadenza:</label>
-                <input type="date" id="deadline-due-date">
-            </div>
-            
-            <div class="modal-buttons">
-                <button class="btn btn-cancel" onclick="closeDeadlineModal()">❌ Annulla</button>
-                <button class="btn" onclick="saveDeadlineTask()">➕ Aggiungi</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Note Storia -->
-    <div id="history-note-modal" class="modal" onclick="closeHistoryNoteModalOnBackground(event)">
-        <div class="modal-content">
-            <span class="close" onclick="closeHistoryNoteModal()">&times;</span>
-            <h3 id="history-note-modal-title">📝 Aggiungi Nota</h3>
-            
-            <div class="form-group">
-                <label>Nota:</label>
-                <textarea id="history-note-text" placeholder="Scrivi qui la nota per questa attività completata..."></textarea>
-            </div>
-            
-            <div class="modal-buttons">
-                <button class="btn btn-cancel" onclick="closeHistoryNoteModal()">❌ Annulla</button>
-                <button class="btn" id="history-note-save-btn" onclick="saveHistoryNote()">💾 Salva Nota</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Modifica Note -->
-    <div id="edit-note-modal" class="modal" onclick="closeEditNoteModalOnBackground(event)">
-        <div class="modal-content">
-            <span class="close" onclick="closeEditNoteModal()">&times;</span>
-            <h3>✏️ Modifica Nota</h3>
-            
-            <div class="form-group">
-                <label>Nota:</label>
-                <textarea id="edit-note-text" placeholder="Modifica la tua nota..."></textarea>
-            </div>
-            
-            <div class="modal-buttons">
-                <button class="btn btn-cancel" onclick="closeEditNoteModal()">❌ Annulla</button>
-                <button class="btn" onclick="saveEditedNote()">💾 Salva Modifiche</button>
+        <!-- Modal Modifica Note -->
+        <div id="edit-note-modal" class="modal" onclick="closeEditNoteModalOnBackground(event)">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditNoteModal()">&times;</span>
+                <h3>✏️ Modifica Nota</h3>
+                
+                <div class="form-group">
+                    <label>Nota:</label>
+                    <textarea id="edit-note-text" placeholder="Modifica la tua nota..."></textarea>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button class="btn btn-cancel" onclick="closeEditNoteModal()">❌ Annulla</button>
+                    <button class="btn" onclick="saveEditedNote()">💾 Salva Modifiche</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Global state
+        // Global variables
+        let currentUser = null;
         let currentDate = new Date();
-        let todos = JSON.parse(localStorage.getItem('officeflow_todos') || '[]');
-        let deadlineTasks = JSON.parse(localStorage.getItem('officeflow_deadlines') || '[]');
-        let completedTasks = JSON.parse(localStorage.getItem('officeflow_completed') || '[]');
-        let notes = JSON.parse(localStorage.getItem('officeflow_notes') || '[]');
+        let todos = [];
+        let deadlineTasks = [];
+        let completedTasks = [];
+        let notes = [];
         let editingHistoryNoteTaskId = null;
         let editingNoteId = null;
         let currentTasksSubtab = 'todo';
+        let dataListeners = [];
 
-        // Utility functions
-        function saveData() {
-            localStorage.setItem('officeflow_todos', JSON.stringify(todos));
-            localStorage.setItem('officeflow_deadlines', JSON.stringify(deadlineTasks));
-            localStorage.setItem('officeflow_completed', JSON.stringify(completedTasks));
-            localStorage.setItem('officeflow_notes', JSON.stringify(notes));
+        // Authentication functions
+        function switchAuthTab(type, tabElement) {
+            const tabs = document.querySelectorAll('.auth-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabElement.classList.add('active');
+
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const authError = document.getElementById('auth-error');
+
+            authError.style.display = 'none';
+
+            if (type === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+            }
         }
 
+        function showAuthError(message) {
+            const authError = document.getElementById('auth-error');
+            authError.textContent = message;
+            authError.style.display = 'block';
+        }
+
+        function setAuthLoading(isLoading, buttonId) {
+            const button = document.getElementById(buttonId);
+            if (isLoading) {
+                button.disabled = true;
+                button.innerHTML = '<div class="auth-loading"></div>Caricamento...';
+            } else {
+                button.disabled = false;
+                button.innerHTML = buttonId === 'login-btn' ? 'Accedi' : 'Registrati';
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                showAuthError('Inserisci email e password');
+                return;
+            }
+
+            setAuthLoading(true, 'login-btn');
+            
+            try {
+                await window.firebase.signInWithEmailAndPassword(window.firebase.auth, email, password);
+                // Success handled by onAuthStateChanged
+            } catch (error) {
+                console.error('Login error:', error);
+                let errorMessage = 'Errore durante l\'accesso';
+                
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'Account non trovato';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Password non corretta';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Email non valida';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Troppi tentativi. Riprova più tardi';
+                        break;
+                    default:
+                        errorMessage = error.message;
+                }
+                
+                showAuthError(errorMessage);
+            } finally {
+                setAuthLoading(false, 'register-btn');
+            }
+        }
+
+        async function handleLogout() {
+            if (confirm('Sei sicuro di voler uscire?')) {
+                try {
+                    await window.firebase.signOut(window.firebase.auth);
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    showSuccessMessage('Errore durante il logout');
+                }
+            }
+        }
+
+        // Firebase data management
+        function showSyncIndicator(status, message) {
+            const indicator = document.getElementById('sync-indicator');
+            const dot = indicator.querySelector('.sync-dot');
+            const text = document.getElementById('sync-text');
+
+            indicator.className = 'sync-indicator show';
+            dot.className = 'sync-dot';
+            
+            switch (status) {
+                case 'syncing':
+                    indicator.classList.add('syncing');
+                    dot.classList.add('pulse');
+                    break;
+                case 'error':
+                    indicator.classList.add('error');
+                    break;
+                default:
+                    // success - no additional classes
+            }
+            
+            text.textContent = message;
+            
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 3000);
+        }
+
+        function setupDataListeners() {
+            if (!currentUser) return;
+
+            // Clear existing listeners
+            dataListeners.forEach(unsubscribe => unsubscribe());
+            dataListeners = [];
+
+            const userId = currentUser.uid;
+
+            // Listen to todos
+            const todosQuery = window.firebase.query(
+                window.firebase.collection(window.firebase.db, `users/${userId}/todos`),
+                window.firebase.orderBy('createdAt', 'desc')
+            );
+            
+            const unsubscribeTodos = window.firebase.onSnapshot(todosQuery, (snapshot) => {
+                todos = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
+                    updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
+                }));
+                renderTasks();
+                renderCalendar();
+            }, (error) => {
+                console.error('Error listening to todos:', error);
+                showSyncIndicator('error', 'Errore sincronizzazione');
+            });
+            dataListeners.push(unsubscribeTodos);
+
+            // Listen to deadline tasks
+            const deadlinesQuery = window.firebase.query(
+                window.firebase.collection(window.firebase.db, `users/${userId}/deadlines`),
+                window.firebase.orderBy('createdAt', 'desc')
+            );
+            
+            const unsubscribeDeadlines = window.firebase.onSnapshot(deadlinesQuery, (snapshot) => {
+                deadlineTasks = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
+                    updatedAt: doc.data().updatedAt?.toDate?.()?.toISOString() || doc.data().updatedAt
+                }));
+                renderTasks();
+                renderCalendar();
+            }, (error) => {
+                console.error('Error listening to deadlines:', error);
+                showSyncIndicator('error', 'Errore sincronizzazione');
+            });
+            dataListeners.push(unsubscribeDeadlines);
+
+            // Listen to completed tasks
+            const completedQuery = window.firebase.query(
+                window.firebase.collection(window.firebase.db, `users/${userId}/completed`),
+                window.firebase.orderBy('completedAt', 'desc')
+            );
+            
+            const unsubscribeCompleted = window.firebase.onSnapshot(completedQuery, (snapshot) => {
+                completedTasks = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt,
+                    completedAt: doc.data().completedAt?.toDate?.()?.toISOString() || doc.data().completedAt,
+                    noteDate: doc.data().noteDate?.toDate?.()?.toISOString() || doc.data().noteDate
+                }));
+                renderHistory();
+            }, (error) => {
+                console.error('Error listening to completed:', error);
+                showSyncIndicator('error', 'Errore sincronizzazione');
+            });
+            dataListeners.push(unsubscribeCompleted);
+
+            // Listen to notes
+            const notesQuery = window.firebase.query(
+                window.firebase.collection(window.firebase.db, `users/${userId}/notes`),
+                window.firebase.orderBy('date', 'desc')
+            );
+            
+            const unsubscribeNotes = window.firebase.onSnapshot(notesQuery, (snapshot) => {
+                notes = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data(),
+                    date: doc.data().date?.toDate?.()?.toISOString() || doc.data().date
+                }));
+                renderNotes();
+            }, (error) => {
+                console.error('Error listening to notes:', error);
+                showSyncIndicator('error', 'Errore sincronizzazione');
+            });
+            dataListeners.push(unsubscribeNotes);
+        }
+
+        async function saveToFirebase(collection, data, docId = null) {
+            if (!currentUser) return;
+
+            try {
+                showSyncIndicator('syncing', 'Sincronizzazione...');
+                
+                const userId = currentUser.uid;
+                const collectionRef = window.firebase.collection(window.firebase.db, `users/${userId}/${collection}`);
+                
+                if (docId) {
+                    await window.firebase.updateDoc(window.firebase.doc(window.firebase.db, `users/${userId}/${collection}`, docId), {
+                        ...data,
+                        updatedAt: window.firebase.serverTimestamp()
+                    });
+                } else {
+                    await window.firebase.addDoc(collectionRef, {
+                        ...data,
+                        createdAt: window.firebase.serverTimestamp()
+                    });
+                }
+                
+                showSyncIndicator('success', 'Sincronizzato');
+            } catch (error) {
+                console.error('Error saving to Firebase:', error);
+                showSyncIndicator('error', 'Errore salvataggio');
+                throw error;
+            }
+        }
+
+        async function deleteFromFirebase(collection, docId) {
+            if (!currentUser) return;
+
+            try {
+                showSyncIndicator('syncing', 'Eliminazione...');
+                
+                const userId = currentUser.uid;
+                await window.firebase.deleteDoc(window.firebase.doc(window.firebase.db, `users/${userId}/${collection}`, docId));
+                
+                showSyncIndicator('success', 'Eliminato');
+            } catch (error) {
+                console.error('Error deleting from Firebase:', error);
+                showSyncIndicator('error', 'Errore eliminazione');
+                throw error;
+            }
+        }
+
+        // Utility functions (same as before)
         function formatDate(date) {
             return new Date(date).toLocaleDateString('it-IT');
         }
@@ -1600,7 +2163,7 @@
             }
         }
 
-        // Day popup functions with enhanced task interaction
+        // Day popup functions
         function showDayPopup(date, dayElement) {
             const popup = document.getElementById('day-popup');
             const dateHeader = document.getElementById('day-popup-date');
@@ -1623,18 +2186,18 @@
                             ⏰ Attività da fare
                         </div>
                         ${todoTasks.map(task => `
-                            <div class="day-popup-task todo" onclick="showTaskDetailPopup(${task.id}, 'todo', event)">
+                            <div class="day-popup-task todo" onclick="showTaskDetailPopup('${task.id}', 'todo', event)">
                                 <div class="day-popup-task-content">
                                     <div class="day-popup-task-title">${task.title}</div>
                                 </div>
                                 <div class="day-popup-task-actions" onclick="event.stopPropagation()">
-                                    <button class="day-popup-action-btn complete" onclick="completeTodoTask(${task.id})" title="Completa">
+                                    <button class="day-popup-action-btn complete" onclick="completeTodoTask('${task.id}')" title="Completa">
                                         ✓
                                     </button>
-                                    <button class="day-popup-action-btn edit" onclick="editTodoTask(${task.id})" title="Modifica">
+                                    <button class="day-popup-action-btn edit" onclick="editTodoTask('${task.id}')" title="Modifica">
                                         ✏️
                                     </button>
-                                    <button class="day-popup-action-btn delete" onclick="deleteTodoTask(${task.id})" title="Elimina">
+                                    <button class="day-popup-action-btn delete" onclick="deleteTodoTask('${task.id}')" title="Elimina">
                                         🗑️
                                     </button>
                                 </div>
@@ -1651,18 +2214,18 @@
                             📅 Scadenze
                         </div>
                         ${deadlineTasksForDay.map(task => `
-                            <div class="day-popup-task deadline" onclick="showTaskDetailPopup(${task.id}, 'deadline', event)">
+                            <div class="day-popup-task deadline" onclick="showTaskDetailPopup('${task.id}', 'deadline', event)">
                                 <div class="day-popup-task-content">
                                     <div class="day-popup-task-title">${task.title}</div>
                                 </div>
                                 <div class="day-popup-task-actions" onclick="event.stopPropagation()">
-                                    <button class="day-popup-action-btn complete" onclick="completeDeadlineTask(${task.id})" title="Completa">
+                                    <button class="day-popup-action-btn complete" onclick="completeDeadlineTask('${task.id}')" title="Completa">
                                         ✓
                                     </button>
-                                    <button class="day-popup-action-btn edit" onclick="editDeadlineTask(${task.id})" title="Modifica">
+                                    <button class="day-popup-action-btn edit" onclick="editDeadlineTask('${task.id}')" title="Modifica">
                                         ✏️
                                     </button>
-                                    <button class="day-popup-action-btn delete" onclick="deleteDeadlineTask(${task.id})" title="Elimina">
+                                    <button class="day-popup-action-btn delete" onclick="deleteDeadlineTask('${task.id}')" title="Elimina">
                                         🗑️
                                     </button>
                                 </div>
@@ -1771,9 +2334,9 @@
             
             meta.innerHTML = metaHtml;
             
-            const completeAction = taskType === 'todo' ? `completeTodoTask(${taskId})` : `completeDeadlineTask(${taskId})`;
-            const editAction = taskType === 'todo' ? `editTodoTask(${taskId})` : `editDeadlineTask(${taskId})`;
-            const deleteAction = taskType === 'todo' ? `deleteTodoTask(${taskId})` : `deleteDeadlineTask(${taskId})`;
+            const completeAction = taskType === 'todo' ? `completeTodoTask('${taskId}')` : `completeDeadlineTask('${taskId}')`;
+            const editAction = taskType === 'todo' ? `editTodoTask('${taskId}')` : `editDeadlineTask('${taskId}')`;
+            const deleteAction = taskType === 'todo' ? `deleteTodoTask('${taskId}')` : `deleteDeadlineTask('${taskId}')`;
             
             actions.innerHTML = `
                 <button class="task-detail-btn complete" onclick="${completeAction}">
@@ -1818,13 +2381,13 @@
                     <div class="task-header">
                         <div class="task-title">${todo.title}</div>
                         <div class="task-header-buttons">
-                            <button class="task-header-btn complete" onclick="completeTodoTask(${todo.id})" title="Completa">
+                            <button class="task-header-btn complete" onclick="completeTodoTask('${todo.id}')" title="Completa">
                                 ✓
                             </button>
-                            <button class="task-header-btn edit" onclick="editTodoTask(${todo.id})" title="Modifica">
+                            <button class="task-header-btn edit" onclick="editTodoTask('${todo.id}')" title="Modifica">
                                 ✏️
                             </button>
-                            <button class="task-header-btn delete" onclick="deleteTodoTask(${todo.id})" title="Elimina">
+                            <button class="task-header-btn delete" onclick="deleteTodoTask('${todo.id}')" title="Elimina">
                                 🗑️
                             </button>
                         </div>
@@ -1870,13 +2433,13 @@
                         <div class="task-header">
                             <div class="task-title">${task.title}</div>
                             <div class="task-header-buttons">
-                                <button class="task-header-btn complete" onclick="completeDeadlineTask(${task.id})" title="Completa">
+                                <button class="task-header-btn complete" onclick="completeDeadlineTask('${task.id}')" title="Completa">
                                     ✓
                                 </button>
-                                <button class="task-header-btn edit" onclick="editDeadlineTask(${task.id})" title="Modifica">
+                                <button class="task-header-btn edit" onclick="editDeadlineTask('${task.id}')" title="Modifica">
                                     ✏️
                                 </button>
-                                <button class="task-header-btn delete" onclick="deleteDeadlineTask(${task.id})" title="Elimina">
+                                <button class="task-header-btn delete" onclick="deleteDeadlineTask('${task.id}')" title="Elimina">
                                     🗑️
                                 </button>
                             </div>
@@ -1917,7 +2480,7 @@
             }
         }
 
-        function saveTodoTask() {
+        async function saveTodoTask() {
             const title = document.getElementById('todo-title').value.trim();
             const description = document.getElementById('todo-description').value.trim();
             
@@ -1926,31 +2489,31 @@
                 return;
             }
             
-            if (window.editingTodoId) {
-                const todo = todos.find(t => t.id === window.editingTodoId);
-                if (todo) {
-                    todo.title = title;
-                    todo.description = description;
-                    todo.updatedAt = new Date().toISOString();
+            try {
+                if (window.editingTodoId) {
+                    const todo = todos.find(t => t.id === window.editingTodoId);
+                    if (todo) {
+                        await saveToFirebase('todos', {
+                            title: title,
+                            description: description,
+                            completed: false
+                        }, window.editingTodoId);
+                    }
+                    showSuccessMessage('Attività modificata con successo!');
+                } else {
+                    await saveToFirebase('todos', {
+                        title: title,
+                        description: description,
+                        completed: false
+                    });
+                    showSuccessMessage('Attività aggiunta con successo!');
                 }
-                showSuccessMessage('Attività modificata con successo!');
-            } else {
-                const newTodo = {
-                    id: Date.now(),
-                    title: title,
-                    description: description,
-                    completed: false,
-                    createdAt: new Date().toISOString()
-                };
-                todos.push(newTodo);
-                showSuccessMessage('Attività aggiunta con successo!');
+                
+                closeTodoModal();
+                closeTaskDetailPopup();
+            } catch (error) {
+                alert('Errore durante il salvataggio');
             }
-            
-            saveData();
-            closeTodoModal();
-            closeTaskDetailPopup();
-            renderTasks();
-            renderCalendar();
         }
 
         function editTodoTask(id) {
@@ -1966,41 +2529,41 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function completeTodoTask(id) {
+        async function completeTodoTask(id) {
             if (confirm('✅ Sei sicuro di aver completato questa attività?')) {
-                const todoIndex = todos.findIndex(t => t.id === id);
-                if (todoIndex !== -1) {
-                    const todo = todos[todoIndex];
-                    todo.completed = true;
-                    todo.completedAt = new Date().toISOString();
-                    
-                    completedTasks.unshift({
-                        ...todo,
-                        type: 'todo'
-                    });
-                    
-                    todos.splice(todoIndex, 1);
-                    
-                    saveData();
-                    closeDayPopup();
-                    closeTaskDetailPopup();
-                    renderTasks();
-                    renderCalendar();
-                    renderHistory();
-                    showSuccessMessage('Attività completata!');
+                const todo = todos.find(t => t.id === id);
+                if (todo) {
+                    try {
+                        // Add to completed
+                        await saveToFirebase('completed', {
+                            ...todo,
+                            type: 'todo',
+                            completedAt: window.firebase.serverTimestamp()
+                        });
+                        
+                        // Delete from todos
+                        await deleteFromFirebase('todos', id);
+                        
+                        closeDayPopup();
+                        closeTaskDetailPopup();
+                        showSuccessMessage('Attività completata!');
+                    } catch (error) {
+                        alert('Errore durante il completamento');
+                    }
                 }
             }
         }
 
-        function deleteTodoTask(id) {
+        async function deleteTodoTask(id) {
             if (confirm('🗑️ Sei sicuro di voler eliminare definitivamente questa attività?')) {
-                todos = todos.filter(t => t.id !== id);
-                saveData();
-                closeDayPopup();
-                closeTaskDetailPopup();
-                renderTasks();
-                renderCalendar();
-                showSuccessMessage('Attività eliminata!');
+                try {
+                    await deleteFromFirebase('todos', id);
+                    closeDayPopup();
+                    closeTaskDetailPopup();
+                    showSuccessMessage('Attività eliminata!');
+                } catch (error) {
+                    alert('Errore durante l\'eliminazione');
+                }
             }
         }
 
@@ -2029,7 +2592,7 @@
             }
         }
 
-        function saveDeadlineTask() {
+        async function saveDeadlineTask() {
             const title = document.getElementById('deadline-title').value.trim();
             const description = document.getElementById('deadline-description').value.trim();
             const startDate = document.getElementById('deadline-start-date').value;
@@ -2050,35 +2613,32 @@
                 return;
             }
             
-            if (window.editingDeadlineId) {
-                const task = deadlineTasks.find(t => t.id === window.editingDeadlineId);
-                if (task) {
-                    task.title = title;
-                    task.description = description;
-                    task.startDate = startDate;
-                    task.dueDate = dueDate;
-                    task.updatedAt = new Date().toISOString();
+            try {
+                if (window.editingDeadlineId) {
+                    await saveToFirebase('deadlines', {
+                        title: title,
+                        description: description,
+                        startDate: startDate,
+                        dueDate: dueDate,
+                        completed: false
+                    }, window.editingDeadlineId);
+                    showSuccessMessage('Attività modificata con successo!');
+                } else {
+                    await saveToFirebase('deadlines', {
+                        title: title,
+                        description: description,
+                        startDate: startDate,
+                        dueDate: dueDate,
+                        completed: false
+                    });
+                    showSuccessMessage('Attività aggiunta con successo!');
                 }
-                showSuccessMessage('Attività modificata con successo!');
-            } else {
-                const newDeadlineTask = {
-                    id: Date.now(),
-                    title: title,
-                    description: description,
-                    startDate: startDate,
-                    dueDate: dueDate,
-                    completed: false,
-                    createdAt: new Date().toISOString()
-                };
-                deadlineTasks.push(newDeadlineTask);
-                showSuccessMessage('Attività aggiunta con successo!');
+                
+                closeDeadlineModal();
+                closeTaskDetailPopup();
+            } catch (error) {
+                alert('Errore durante il salvataggio');
             }
-            
-            saveData();
-            closeDeadlineModal();
-            closeTaskDetailPopup();
-            renderTasks();
-            renderCalendar();
         }
 
         function editDeadlineTask(id) {
@@ -2096,41 +2656,41 @@
             document.body.style.overflow = 'hidden';
         }
 
-        function completeDeadlineTask(id) {
+        async function completeDeadlineTask(id) {
             if (confirm('✅ Sei sicuro di aver completato questa attività?')) {
-                const taskIndex = deadlineTasks.findIndex(t => t.id === id);
-                if (taskIndex !== -1) {
-                    const task = deadlineTasks[taskIndex];
-                    task.completed = true;
-                    task.completedAt = new Date().toISOString();
-                    
-                    completedTasks.unshift({
-                        ...task,
-                        type: 'deadline'
-                    });
-                    
-                    deadlineTasks.splice(taskIndex, 1);
-                    
-                    saveData();
-                    closeDayPopup();
-                    closeTaskDetailPopup();
-                    renderTasks();
-                    renderCalendar();
-                    renderHistory();
-                    showSuccessMessage('Attività completata!');
+                const task = deadlineTasks.find(t => t.id === id);
+                if (task) {
+                    try {
+                        // Add to completed
+                        await saveToFirebase('completed', {
+                            ...task,
+                            type: 'deadline',
+                            completedAt: window.firebase.serverTimestamp()
+                        });
+                        
+                        // Delete from deadlines
+                        await deleteFromFirebase('deadlines', id);
+                        
+                        closeDayPopup();
+                        closeTaskDetailPopup();
+                        showSuccessMessage('Attività completata!');
+                    } catch (error) {
+                        alert('Errore durante il completamento');
+                    }
                 }
             }
         }
 
-        function deleteDeadlineTask(id) {
+        async function deleteDeadlineTask(id) {
             if (confirm('🗑️ Sei sicuro di voler eliminare definitivamente questa attività?')) {
-                deadlineTasks = deadlineTasks.filter(t => t.id !== id);
-                saveData();
-                closeDayPopup();
-                closeTaskDetailPopup();
-                renderTasks();
-                renderCalendar();
-                showSuccessMessage('Attività eliminata!');
+                try {
+                    await deleteFromFirebase('deadlines', id);
+                    closeDayPopup();
+                    closeTaskDetailPopup();
+                    showSuccessMessage('Attività eliminata!');
+                } catch (error) {
+                    alert('Errore durante l\'eliminazione');
+                }
             }
         }
 
@@ -2161,17 +2721,17 @@
                                 </div>
                             ` : ''}
                         </div>
-                        <button class="history-note-btn ${task.note ? 'has-note' : ''}" onclick="openHistoryNoteModal(${task.id})">
+                        <button class="history-note-btn ${task.note ? 'has-note' : ''}" onclick="openHistoryNoteModal('${task.id}')">
                             ${task.note ? '✏️ Modifica Nota' : '📝 Aggiungi Nota'}
                         </button>
                     </div>
                     ${task.note ? `
                         <div class="history-note">
                             <div class="history-note-actions">
-                                <button class="history-note-action" onclick="openHistoryNoteModal(${task.id})" title="Modifica nota">
+                                <button class="history-note-action" onclick="openHistoryNoteModal('${task.id}')" title="Modifica nota">
                                     ✏️
                                 </button>
-                                <button class="history-note-action delete" onclick="deleteHistoryNote(${task.id})" title="Elimina nota">
+                                <button class="history-note-action delete" onclick="deleteHistoryNote('${task.id}')" title="Elimina nota">
                                     🗑️
                                 </button>
                             </div>
@@ -2222,7 +2782,7 @@
             }
         }
 
-        function saveHistoryNote() {
+        async function saveHistoryNote() {
             const noteText = document.getElementById('history-note-text').value.trim();
             
             if (!noteText) {
@@ -2232,50 +2792,59 @@
             
             const task = completedTasks.find(t => t.id === editingHistoryNoteTaskId);
             if (task) {
-                const isNewNote = !task.note;
-                task.note = noteText;
-                task.noteDate = isNewNote ? new Date().toISOString() : (task.noteDate || new Date().toISOString());
-                
-                saveData();
-                closeHistoryNoteModal();
-                renderHistory();
-                showSuccessMessage(isNewNote ? 'Nota aggiunta!' : 'Nota modificata!');
+                try {
+                    const isNewNote = !task.note;
+                    await saveToFirebase('completed', {
+                        ...task,
+                        note: noteText,
+                        noteDate: isNewNote ? window.firebase.serverTimestamp() : (task.noteDate || window.firebase.serverTimestamp())
+                    }, editingHistoryNoteTaskId);
+                    
+                    closeHistoryNoteModal();
+                    showSuccessMessage(isNewNote ? 'Nota aggiunta!' : 'Nota modificata!');
+                } catch (error) {
+                    alert('Errore durante il salvataggio della nota');
+                }
             }
         }
 
-        function deleteHistoryNote(taskId) {
+        async function deleteHistoryNote(taskId) {
             if (confirm('🗑️ Sei sicuro di voler eliminare questa nota?')) {
                 const task = completedTasks.find(t => t.id === taskId);
                 if (task) {
-                    delete task.note;
-                    delete task.noteDate;
-                    
-                    saveData();
-                    renderHistory();
-                    showSuccessMessage('Nota eliminata!');
+                    try {
+                        const updatedTask = { ...task };
+                        delete updatedTask.note;
+                        delete updatedTask.noteDate;
+                        
+                        await saveToFirebase('completed', updatedTask, taskId);
+                        showSuccessMessage('Nota eliminata!');
+                    } catch (error) {
+                        alert('Errore durante l\'eliminazione della nota');
+                    }
                 }
             }
         }
 
         // Notes functions with edit and delete functionality
-        function saveNote() {
+        async function saveNote() {
             const noteText = document.getElementById('notes-text').value.trim();
             if (!noteText) {
                 alert('⚠️ Scrivi qualcosa prima di salvare!');
                 return;
             }
             
-            const newNote = {
-                id: Date.now(),
-                text: noteText,
-                date: new Date().toISOString()
-            };
-            
-            notes.unshift(newNote);
-            saveData();
-            document.getElementById('notes-text').value = '';
-            renderNotes();
-            showSuccessMessage('Nota salvata!');
+            try {
+                await saveToFirebase('notes', {
+                    text: noteText,
+                    date: window.firebase.serverTimestamp()
+                });
+                
+                document.getElementById('notes-text').value = '';
+                showSuccessMessage('Nota salvata!');
+            } catch (error) {
+                alert('Errore durante il salvataggio della nota');
+            }
         }
 
         function renderNotes() {
@@ -2290,10 +2859,10 @@
                 notes.map(note => `
                     <div class="notes-item">
                         <div class="notes-actions">
-                            <button class="notes-action-btn edit" onclick="editNote(${note.id})" title="Modifica nota">
+                            <button class="notes-action-btn edit" onclick="editNote('${note.id}')" title="Modifica nota">
                                 ✏️
                             </button>
-                            <button class="notes-action-btn delete" onclick="deleteNote(${note.id})" title="Elimina nota">
+                            <button class="notes-action-btn delete" onclick="deleteNote('${note.id}')" title="Elimina nota">
                                 🗑️
                             </button>
                         </div>
@@ -2328,7 +2897,7 @@
             }
         }
 
-        function saveEditedNote() {
+        async function saveEditedNote() {
             const noteText = document.getElementById('edit-note-text').value.trim();
             
             if (!noteText) {
@@ -2338,26 +2907,32 @@
             
             const note = notes.find(n => n.id === editingNoteId);
             if (note) {
-                note.text = noteText;
-                note.date = new Date().toISOString();
-                
-                saveData();
-                closeEditNoteModal();
-                renderNotes();
-                showSuccessMessage('Nota modificata!');
+                try {
+                    await saveToFirebase('notes', {
+                        text: noteText,
+                        date: firebase.firestore.FieldValue.serverTimestamp()
+                    }, editingNoteId);
+                    
+                    closeEditNoteModal();
+                    showSuccessMessage('Nota modificata!');
+                } catch (error) {
+                    alert('Errore durante la modifica della nota');
+                }
             }
         }
 
-        function deleteNote(noteId) {
+        async function deleteNote(noteId) {
             if (confirm('🗑️ Sei sicuro di voler eliminare questa nota?')) {
-                notes = notes.filter(n => n.id !== noteId);
-                saveData();
-                renderNotes();
-                showSuccessMessage('Nota eliminata!');
+                try {
+                    await deleteFromFirebase('notes', noteId);
+                    showSuccessMessage('Nota eliminata!');
+                } catch (error) {
+                    alert('Errore durante l\'eliminazione della nota');
+                }
             }
         }
 
-        // PDF Export functions
+        // PDF Export functions (keeping the same logic as before)
         function exportTasks(taskType) {
             const button = event?.target || document.querySelector('.export-btn');
             const originalText = button.innerHTML;
@@ -2639,7 +3214,7 @@
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('📋 Initializing OfficeFlow ...');
+            console.log('🔋 Initializing OfficeFlow with Firebase...');
             
             // Load jsPDF for PDF export functionality
             const script = document.createElement('script');
@@ -2651,8 +3226,43 @@
                 console.warn('📄 jsPDF failed to load - will use text export fallback');
             };
             document.head.appendChild(script);
+
+            // Setup Firebase authentication listener
+            window.firebase.onAuthStateChanged(window.firebase.auth, (user) => {
+                if (user) {
+                    console.log('👤 User signed in:', user.email);
+                    currentUser = user;
+                    
+                    // Show main app
+                    document.getElementById('auth-container').style.display = 'none';
+                    document.getElementById('main-app').style.display = 'block';
+                    document.getElementById('user-email').textContent = user.email;
+                    
+                    // Setup data listeners
+                    setupDataListeners();
+                    
+                    // Initialize UI
+                    renderCalendar();
+                } else {
+                    console.log('👤 User signed out');
+                    currentUser = null;
+                    
+                    // Clear data listeners
+                    dataListeners.forEach(unsubscribe => unsubscribe());
+                    dataListeners = [];
+                    
+                    // Clear local data
+                    todos = [];
+                    deadlineTasks = [];
+                    completedTasks = [];
+                    notes = [];
+                    
+                    // Show auth screen
+                    document.getElementById('main-app').style.display = 'none';
+                    document.getElementById('auth-container').style.display = 'flex';
+                }
+            });
             
-            renderCalendar();
             console.log('🚀 OfficeFlow initialized successfully!');
         });
 
@@ -2664,7 +3274,29 @@
             }
         });
 
+        // Keyboard shortcuts for login
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                const activeTab = document.querySelector('.auth-tab.active');
+                if (activeTab && activeTab.textContent.includes('Accedi')) {
+                    const loginBtn = document.getElementById('login-btn');
+                    if (!loginBtn.disabled && document.getElementById('auth-container').style.display !== 'none') {
+                        handleLogin();
+                    }
+                } else if (activeTab && activeTab.textContent.includes('Registrati')) {
+                    const registerBtn = document.getElementById('register-btn');
+                    if (!registerBtn.disabled && document.getElementById('auth-container').style.display !== 'none') {
+                        handleRegister();
+                    }
+                }
+            }
+        });
+
         // Expose functions to global scope
+        window.switchAuthTab = switchAuthTab;
+        window.handleLogin = handleLogin;
+        window.handleRegister = handleRegister;
+        window.handleLogout = handleLogout;
         window.showTab = showTab;
         window.showTasksSubtab = showTasksSubtab;
         window.changeMonth = changeMonth;
@@ -2702,3 +3334,53 @@
     </script>
 </body>
 </html>
+             = error.message;
+                }
+                
+                showAuthError(errorMessage);
+            } finally {
+                setAuthLoading(false, 'login-btn');
+            }
+        }
+
+        async function handleRegister() {
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-password-confirm').value;
+
+            if (!email || !password || !confirmPassword) {
+                showAuthError('Compila tutti i campi');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAuthError('La password deve avere almeno 6 caratteri');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAuthError('Le password non coincidono');
+                return;
+            }
+
+            setAuthLoading(true, 'register-btn');
+
+            try {
+                await window.firebase.createUserWithEmailAndPassword(window.firebase.auth, email, password);
+                // Success handled by onAuthStateChanged
+            } catch (error) {
+                console.error('Registration error:', error);
+                let errorMessage = 'Errore durante la registrazione';
+                
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'Email già in uso';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Email non valida';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Password troppo debole';
+                        break;
+                    default:
+                        errorMessage
