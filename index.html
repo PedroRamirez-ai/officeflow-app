@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#4f46e5">
     <title>OfficeFlow - Gestione Attività</title>
     
     <style>
@@ -23,11 +20,8 @@
             font-size: 16px;
             line-height: 1.5;
             padding-bottom: 80px;
-            -webkit-overflow-scrolling: touch;
-            overflow-x: hidden;
         }
 
-        /* AUTH STYLES */
         .auth-container {
             position: fixed;
             top: 0;
@@ -146,6 +140,7 @@
             background: #fef2f2;
             border-radius: 6px;
             border-left: 4px solid #dc2626;
+            display: none;
         }
 
         .auth-loading {
@@ -164,7 +159,16 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* USER INFO */
+        .main-app {
+            display: none;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
         .user-info {
             background: rgba(255, 255, 255, 0.1);
             padding: 10px 15px;
@@ -196,18 +200,6 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
-        /* HIDDEN BY DEFAULT */
-        .main-app {
-            display: none;
-        }
-
-        /* BASIC STYLES FOR MAIN APP */
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 15px;
-        }
-
         .header {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -235,8 +227,286 @@
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            text-align: center;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        .calendar-nav {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-nav:hover {
+            background: #4338ca;
+            transform: scale(1.1);
+        }
+
+        .calendar-title {
+            font-size: 1.3rem;
+            font-weight: 700;
             color: #1f2937;
+            text-align: center;
+            flex: 1;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 2px;
+        }
+
+        .calendar-day-header {
+            background: #374151;
+            color: white;
+            padding: 8px 4px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+
+        .calendar-day {
+            background: white;
+            min-height: 60px;
+            padding: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .calendar-day:hover {
+            background: #f9fafb;
+            transform: scale(1.02);
+        }
+
+        .calendar-day.other-month {
+            background: #f9fafb;
+            color: #9ca3af;
+        }
+
+        .calendar-day.today {
+            background: #4f46e5;
+            color: white;
+            font-weight: 700;
+        }
+
+        .day-number {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .tasks-header {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 20px;
+            gap: 4px;
+        }
+
+        .tasks-subtab {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            color: #6b7280;
+        }
+
+        .tasks-subtab.active {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+
+        .tasks-content {
+            display: none;
+        }
+
+        .tasks-content.active {
+            display: block;
+        }
+
+        .section-title {
+            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .add-task-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.2s ease;
+        }
+
+        .add-task-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .task-card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #4f46e5;
+            transition: transform 0.2s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .task-card.todo {
+            border-left-color: #f59e0b;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .task-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1f2937;
+            flex: 1;
+        }
+
+        .task-header-buttons {
+            display: flex;
+            gap: 4px;
+        }
+
+        .task-header-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .task-header-btn.complete {
+            background: #10b981;
+            color: white;
+        }
+
+        .task-header-btn.edit {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .task-header-btn.delete {
+            background: #dc2626;
+            color: white;
+        }
+
+        .task-description-box {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
+            color: #6b7280;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            min-height: 40px;
+        }
+
+        .task-description-box.empty {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #9ca3af;
+            padding: 30px 20px;
+            font-size: 1rem;
+        }
+
+        .notes-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 2px solid #f3f4f6;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 16px;
+            margin-bottom: 15px;
+            resize: vertical;
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
         }
 
         .tabs {
@@ -278,6 +548,108 @@
             transform: translateY(-2px);
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(100% - 40px);
+            max-width: 400px;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #1f2937;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #f3f4f6;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-cancel {
+            background: #9ca3af;
+        }
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+            animation: fadeInOut 3s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
         @media (max-width: 480px) {
             .auth-form {
                 padding: 30px 20px;
@@ -286,229 +658,10 @@
     </style>
 </head>
 <body>
-    <!-- Firebase SDK - Version 8 -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyB0cB4SoPlUOaN5RfXPnVca7nJirx51qNM",
-            authDomain: "officeflow-76837.firebaseapp.com",
-            projectId: "officeflow-76837",
-            storageBucket: "officeflow-76837.firebasestorage.app",
-            messagingSenderId: "1041102307856",
-            appId: "1:1041102307856:web:c2cc37d2468e7a25218095"
-        };
-
-        // Initialize Firebase
-        console.log('🔥 Initializing Firebase...');
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
-        console.log('✅ Firebase initialized successfully');
-        console.log('🔐 Auth object:', auth);
-        console.log('🗄️ Firestore object:', db);
-
-        // Global state
-        let currentUser = null;
-
-        // Authentication functions
-        function switchTab(tab) {
-            console.log('🔄 Switching to tab:', tab);
-            
-            const loginTab = document.getElementById('login-tab');
-            const registerTab = document.getElementById('register-tab');
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const errorDiv = document.getElementById('auth-error');
-
-            // Hide error
-            errorDiv.style.display = 'none';
-
-            if (tab === 'login') {
-                loginTab.classList.add('active');
-                registerTab.classList.remove('active');
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-            } else {
-                registerTab.classList.add('active');
-                loginTab.classList.remove('active');
-                registerForm.style.display = 'block';
-                loginForm.style.display = 'none';
-            }
-        }
-
-        function showError(message) {
-            console.log('❌ Showing error:', message);
-            const errorDiv = document.getElementById('auth-error');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        function setLoading(buttonId, isLoading) {
-            const button = document.getElementById(buttonId);
-            if (isLoading) {
-                button.disabled = true;
-                button.innerHTML = '<div class="auth-loading"></div>Caricamento...';
-            } else {
-                button.disabled = false;
-                button.innerHTML = buttonId === 'login-btn' ? 'Accedi' : 'Registrati';
-            }
-        }
-
-        function doLogin() {
-            console.log('🔄 Login function called');
-            
-            const email = document.getElementById('login-email').value.trim();
-            const password = document.getElementById('login-password').value;
-
-            console.log('📧 Email:', email);
-            console.log('🔐 Password length:', password ? password.length : 0);
-
-            if (!email || !password) {
-                showError('Inserisci email e password');
-                return;
-            }
-
-            setLoading('login-btn', true);
-            
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    console.log('✅ Login successful:', userCredential.user.email);
-                })
-                .catch((error) => {
-                    console.error('❌ Login error:', error);
-                    let errorMessage = 'Errore durante l\'accesso';
-                    
-                    switch (error.code) {
-                        case 'auth/user-not-found':
-                            errorMessage = 'Account non trovato';
-                            break;
-                        case 'auth/wrong-password':
-                            errorMessage = 'Password non corretta';
-                            break;
-                        case 'auth/invalid-email':
-                            errorMessage = 'Email non valida';
-                            break;
-                        case 'auth/too-many-requests':
-                            errorMessage = 'Troppi tentativi. Riprova più tardi';
-                            break;
-                    }
-                    
-                    showError(errorMessage);
-                })
-                .finally(() => {
-                    setLoading('login-btn', false);
-                });
-        }
-
-        function doRegister() {
-            console.log('🔄 Register function called');
-            
-            const email = document.getElementById('register-email').value.trim();
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('register-password-confirm').value;
-
-            console.log('📧 Email:', email);
-            console.log('🔐 Password length:', password ? password.length : 0);
-
-            if (!email || !password || !confirmPassword) {
-                showError('Compila tutti i campi');
-                return;
-            }
-
-            if (password.length < 6) {
-                showError('La password deve avere almeno 6 caratteri');
-                return;
-            }
-
-            if (password !== confirmPassword) {
-                showError('Le password non coincidono');
-                return;
-            }
-
-            setLoading('register-btn', true);
-
-            console.log('🚀 Creating user account...');
-            
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    console.log('✅ Registration successful:', userCredential.user.email);
-                })
-                .catch((error) => {
-                    console.error('❌ Registration error:', error);
-                    let errorMessage = 'Errore durante la registrazione';
-                    
-                    switch (error.code) {
-                        case 'auth/email-already-in-use':
-                            errorMessage = 'Email già in uso';
-                            break;
-                        case 'auth/invalid-email':
-                            errorMessage = 'Email non valida';
-                            break;
-                        case 'auth/weak-password':
-                            errorMessage = 'Password troppo debole';
-                            break;
-                    }
-                    
-                    showError(errorMessage);
-                })
-                .finally(() => {
-                    setLoading('register-btn', false);
-                });
-        }
-
-        function doLogout() {
-            console.log('🔄 Logout function called');
-            if (confirm('Sei sicuro di voler uscire?')) {
-                auth.signOut()
-                    .then(() => {
-                        console.log('✅ Logout successful');
-                    })
-                    .catch((error) => {
-                        console.error('❌ Logout error:', error);
-                        alert('Errore durante il logout');
-                    });
-            }
-        }
-
-        // Setup authentication state listener
-        console.log('🔗 Setting up auth listener...');
-        auth.onAuthStateChanged((user) => {
-            console.log('👤 Auth state changed:', user ? user.email : 'signed out');
-            
-            if (user) {
-                // User is signed in
-                console.log('✅ User logged in:', user.email);
-                currentUser = user;
-                
-                // Show main app
-                document.getElementById('auth-container').style.display = 'none';
-                document.getElementById('main-app').style.display = 'block';
-                document.getElementById('user-email').textContent = user.email;
-                
-            } else {
-                // User is signed out
-                console.log('👋 User signed out');
-                currentUser = null;
-                
-                // Show auth screen
-                document.getElementById('main-app').style.display = 'none';
-                document.getElementById('auth-container').style.display = 'flex';
-            }
-        });
-
-        // Make functions global
-        window.switchTab = switchTab;
-        window.doLogin = doLogin;
-        window.doRegister = doRegister;
-        window.doLogout = doLogout;
-
-        console.log('🎯 All functions are now global');
-    </script>
 
     <!-- Authentication Screen -->
     <div id="auth-container" class="auth-container">
@@ -517,45 +670,41 @@
             <div class="auth-subtitle">Gestione Attività di Segreteria</div>
             
             <div class="auth-tabs">
-                <div id="login-tab" class="auth-tab active" onclick="switchTab('login')">Accedi</div>
-                <div id="register-tab" class="auth-tab" onclick="switchTab('register')">Registrati</div>
+                <div id="login-tab" class="auth-tab active" onclick="switchAuthTab('login')">Accedi</div>
+                <div id="register-tab" class="auth-tab" onclick="switchAuthTab('register')">Registrati</div>
             </div>
 
             <!-- Login Form -->
-            <div id="login-form" class="auth-form-content">
+            <div id="login-form">
                 <div class="auth-form-group">
-                    <label for="login-email">Email:</label>
-                    <input type="email" id="login-email" class="auth-input" placeholder="tua@email.com" required>
+                    <label>Email:</label>
+                    <input type="email" id="login-email" class="auth-input" placeholder="tua@email.com">
                 </div>
                 <div class="auth-form-group">
-                    <label for="login-password">Password:</label>
-                    <input type="password" id="login-password" class="auth-input" placeholder="Password" required>
+                    <label>Password:</label>
+                    <input type="password" id="login-password" class="auth-input" placeholder="Password">
                 </div>
-                <button id="login-btn" class="auth-btn" onclick="doLogin()">
-                    Accedi
-                </button>
+                <button id="login-btn" class="auth-btn" onclick="doLogin()">Accedi</button>
             </div>
 
             <!-- Register Form -->
-            <div id="register-form" class="auth-form-content" style="display: none;">
+            <div id="register-form" style="display: none;">
                 <div class="auth-form-group">
-                    <label for="register-email">Email:</label>
-                    <input type="email" id="register-email" class="auth-input" placeholder="tua@email.com" required>
+                    <label>Email:</label>
+                    <input type="email" id="register-email" class="auth-input" placeholder="tua@email.com">
                 </div>
                 <div class="auth-form-group">
-                    <label for="register-password">Password:</label>
-                    <input type="password" id="register-password" class="auth-input" placeholder="Minimo 6 caratteri" required>
+                    <label>Password:</label>
+                    <input type="password" id="register-password" class="auth-input" placeholder="Minimo 6 caratteri">
                 </div>
                 <div class="auth-form-group">
-                    <label for="register-password-confirm">Conferma Password:</label>
-                    <input type="password" id="register-password-confirm" class="auth-input" placeholder="Ripeti password" required>
+                    <label>Conferma Password:</label>
+                    <input type="password" id="register-password-confirm" class="auth-input" placeholder="Ripeti password">
                 </div>
-                <button id="register-btn" class="auth-btn" onclick="doRegister()">
-                    Registrati
-                </button>
+                <button id="register-btn" class="auth-btn" onclick="doRegister()">Registrati</button>
             </div>
 
-            <div id="auth-error" class="auth-error" style="display: none;"></div>
+            <div id="auth-error" class="auth-error"></div>
         </div>
     </div>
 
@@ -574,37 +723,585 @@
             </div>
 
             <div class="content">
-                <h2>🎉 Benvenuto in OfficeFlow!</h2>
-                <p style="margin-top: 20px;">
-                    La tua app di gestione attività è ora collegata a Firebase.<br>
-                    I tuoi dati si sincronizzano automaticamente tra tutti i dispositivi!
-                </p>
-                <p style="margin-top: 20px; color: #6b7280; font-size: 0.9rem;">
-                    Stiamo completando l'integrazione con tutte le funzionalità...<br>
-                    Presto avrai accesso completo al calendario, attività, note e cronologia!
-                </p>
+                <!-- Calendario Tab -->
+                <div id="calendar" class="tab-content active">
+                    <div class="calendar-header">
+                        <button class="calendar-nav" onclick="changeMonth(-1)">‹</button>
+                        <div class="calendar-title" id="calendar-title">Novembre 2024</div>
+                        <button class="calendar-nav" onclick="changeMonth(1)">›</button>
+                    </div>
+                    <div class="calendar-grid" id="calendar-grid">
+                        <!-- Calendar will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Tasks Tab -->
+                <div id="tasks" class="tab-content">
+                    <div class="tasks-header">
+                        <div class="tasks-subtab active" onclick="showTasksSubtab('todo')">⏰ Da Fare</div>
+                        <div class="tasks-subtab" onclick="showTasksSubtab('deadline')">📅 Scadenze</div>
+                    </div>
+
+                    <div id="todo-content" class="tasks-content active">
+                        <div class="section-title">
+                            <span>⏰ Attività Da Fare</span>
+                            <button class="add-task-btn" onclick="openAddTodoModal()" title="Aggiungi">+</button>
+                        </div>
+                        <div id="todo-tasks">
+                            <div class="empty-state">Nessuna attività da fare 🎉</div>
+                        </div>
+                    </div>
+
+                    <div id="deadline-content" class="tasks-content">
+                        <div class="section-title">
+                            <span>📅 Attività Con Scadenza</span>
+                            <button class="add-task-btn" onclick="alert('Funzione in sviluppo!')">+</button>
+                        </div>
+                        <div class="empty-state">Funzionalità in arrivo!</div>
+                    </div>
+                </div>
+
+                <!-- History Tab -->
+                <div id="history" class="tab-content">
+                    <div class="section-title">✅ Attività Completate</div>
+                    <div class="empty-state">Nessuna attività completata ancora.<br>Completa la prima attività! 🎯</div>
+                </div>
+
+                <!-- Notes Tab -->
+                <div id="notes" class="tab-content">
+                    <div class="section-title">📝 Note</div>
+                    <textarea id="notes-text" class="notes-input" placeholder="Scrivi qui le tue note..."></textarea>
+                    <button class="btn" onclick="saveNote()">💾 Salva Nota</button>
+                    <div id="saved-notes"></div>
+                </div>
             </div>
         </div>
 
         <!-- Bottom Navigation -->
         <div class="tabs">
-            <div class="tab active">
+            <div class="tab active" onclick="showTab('calendar')">
                 <div class="tab-icon">📅</div>
                 <div>Calendario</div>
             </div>
-            <div class="tab">
+            <div class="tab" onclick="showTab('tasks')">
                 <div class="tab-icon">📋</div>
                 <div>Attività</div>
             </div>
-            <div class="tab">
+            <div class="tab" onclick="showTab('history')">
                 <div class="tab-icon">✅</div>
                 <div>Storia</div>
             </div>
-            <div class="tab">
+            <div class="tab" onclick="showTab('notes')">
                 <div class="tab-icon">📝</div>
                 <div>Note</div>
             </div>
         </div>
+
+        <!-- Modal Attività -->
+        <div id="todo-modal" class="modal" onclick="closeModalOnBackground(event)">
+            <div class="modal-content">
+                <span class="close" onclick="closeTodoModal()">&times;</span>
+                <h3>⏰ Nuova Attività</h3>
+                
+                <div class="form-group">
+                    <label>Titolo:</label>
+                    <input type="text" id="todo-title" placeholder="es. Controllare email">
+                </div>
+                <div class="form-group">
+                    <label>Descrizione:</label>
+                    <textarea id="todo-description" placeholder="Descrizione dettagliata..."></textarea>
+                </div>
+                
+                <div class="modal-buttons">
+                    <button class="btn btn-cancel" onclick="closeTodoModal()">Annulla</button>
+                    <button class="btn" onclick="saveTodoTask()">➕ Aggiungi</button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentDate = new Date();
+        let todos = [];
+        let auth = null;
+        let db = null;
+
+        // Initialize Firebase
+        function initFirebase() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyB0cB4SoPlUOaN5RfXPnVca7nJirx51qNM",
+                authDomain: "officeflow-76837.firebaseapp.com",
+                projectId: "officeflow-76837",
+                storageBucket: "officeflow-76837.firebasestorage.app",
+                messagingSenderId: "1041102307856",
+                appId: "1:1041102307856:web:c2cc37d2468e7a25218095"
+            };
+
+            try {
+                firebase.initializeApp(firebaseConfig);
+                auth = firebase.auth();
+                db = firebase.firestore();
+                console.log('✅ Firebase initialized');
+
+                // Setup auth listener
+                auth.onAuthStateChanged((user) => {
+                    if (user) {
+                        currentUser = user;
+                        showMainApp();
+                        loadUserData();
+                    } else {
+                        currentUser = null;
+                        showAuthScreen();
+                    }
+                });
+            } catch (error) {
+                console.error('❌ Firebase error:', error);
+                alert('Errore di connessione. Ricarica la pagina.');
+            }
+        }
+
+        // Auth functions
+        function switchAuthTab(tab) {
+            const loginTab = document.getElementById('login-tab');
+            const registerTab = document.getElementById('register-tab');
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const errorDiv = document.getElementById('auth-error');
+
+            errorDiv.style.display = 'none';
+
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+            } else {
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                registerForm.style.display = 'block';
+                loginForm.style.display = 'none';
+            }
+        }
+
+        function showAuthError(message) {
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function setAuthLoading(buttonId, loading) {
+            const button = document.getElementById(buttonId);
+            if (loading) {
+                button.disabled = true;
+                button.innerHTML = '<div class="auth-loading"></div>Caricamento...';
+            } else {
+                button.disabled = false;
+                button.innerHTML = buttonId === 'login-btn' ? 'Accedi' : 'Registrati';
+            }
+        }
+
+        function doLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                showAuthError('Inserisci email e password');
+                return;
+            }
+
+            setAuthLoading('login-btn', true);
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    console.log('✅ Login success');
+                })
+                .catch((error) => {
+                    console.error('❌ Login error:', error);
+                    showAuthError('Errore: ' + error.message);
+                })
+                .finally(() => {
+                    setAuthLoading('login-btn', false);
+                });
+        }
+
+        function doRegister() {
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-password-confirm').value;
+
+            if (!email || !password || !confirmPassword) {
+                showAuthError('Compila tutti i campi');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAuthError('Password troppo corta (minimo 6 caratteri)');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showAuthError('Le password non coincidono');
+                return;
+            }
+
+            setAuthLoading('register-btn', true);
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    console.log('✅ Register success');
+                })
+                .catch((error) => {
+                    console.error('❌ Register error:', error);
+                    showAuthError('Errore: ' + error.message);
+                })
+                .finally(() => {
+                    setAuthLoading('register-btn', false);
+                });
+        }
+
+        function doLogout() {
+            if (confirm('Sei sicuro di voler uscire?')) {
+                auth.signOut();
+            }
+        }
+
+        // App UI functions
+        function showAuthScreen() {
+            document.getElementById('auth-container').style.display = 'flex';
+            document.getElementById('main-app').style.display = 'none';
+        }
+
+        function showMainApp() {
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            document.getElementById('user-email').textContent = currentUser.email;
+            renderCalendar();
+        }
+
+        function showSuccessMessage(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            document.querySelector('.content').prepend(successDiv);
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+
+        // Navigation functions
+        function showTab(tabName) {
+            console.log('🔄 Showing tab:', tabName);
+            
+            // Remove active from all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected content
+            const selectedContent = document.getElementById(tabName);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+            
+            // Activate corresponding tab button
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach((tab, index) => {
+                const tabNames = ['calendar', 'tasks', 'history', 'notes'];
+                if (tabNames[index] === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Specific actions for each tab
+            if (tabName === 'calendar') {
+                renderCalendar();
+            } else if (tabName === 'tasks') {
+                renderTasks();
+            }
+        }
+
+        function showTasksSubtab(subtabName) {
+            console.log('🔄 Showing tasks subtab:', subtabName);
+            
+            // Remove active from all subtabs
+            const subtabs = document.querySelectorAll('.tasks-subtab');
+            subtabs.forEach(subtab => subtab.classList.remove('active'));
+            
+            // Remove active from all task contents
+            const contents = document.querySelectorAll('.tasks-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Activate selected subtab
+            const selectedSubtab = event.target;
+            selectedSubtab.classList.add('active');
+            
+            // Show selected content
+            const selectedContent = document.getElementById(subtabName + '-content');
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+
+            if (subtabName === 'todo') {
+                renderTasks();
+            }
+        }
+
+        // Calendar functions
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            const monthNames = [
+                'Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno',
+                'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+            ];
+            
+            const titleEl = document.getElementById('calendar-title');
+            if (titleEl) {
+                titleEl.textContent = `${monthNames[month]} ${year}`;
+            }
+            
+            const gridEl = document.getElementById('calendar-grid');
+            if (!gridEl) return;
+            
+            const firstDay = new Date(year, month, 1);
+            const startDate = new Date(firstDay);
+            const dayOfWeek = firstDay.getDay();
+            const startOffset = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+            startDate.setDate(startDate.getDate() - startOffset);
+            
+            gridEl.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+            dayHeaders.forEach(day => {
+                const headerEl = document.createElement('div');
+                headerEl.className = 'calendar-day-header';
+                headerEl.textContent = day;
+                gridEl.appendChild(headerEl);
+            });
+            
+            // Add calendar days
+            const today = new Date();
+            const currentDay = new Date(startDate);
+            
+            for (let i = 0; i < 42; i++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                
+                const isCurrentMonth = currentDay.getMonth() === month;
+                const isToday = currentDay.toDateString() === today.toDateString();
+                
+                if (!isCurrentMonth) {
+                    dayEl.classList.add('other-month');
+                }
+                
+                if (isToday) {
+                    dayEl.classList.add('today');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = currentDay.getDate();
+                dayEl.appendChild(dayNumber);
+                
+                gridEl.appendChild(dayEl);
+                currentDay.setDate(currentDay.getDate() + 1);
+            }
+        }
+
+        // Task functions
+        function renderTasks() {
+            const container = document.getElementById('todo-tasks');
+            if (!container) return;
+            
+            const activeTodos = todos.filter(todo => !todo.completed);
+            
+            if (activeTodos.length === 0) {
+                container.innerHTML = '<div class="empty-state">Nessuna attività da fare 🎉<br><small>Clicca il bottone + per aggiungerne una!</small></div>';
+                return;
+            }
+            
+            container.innerHTML = activeTodos.map(todo => `
+                <div class="task-card todo">
+                    <div class="task-header">
+                        <div class="task-title">${todo.title}</div>
+                        <div class="task-header-buttons">
+                            <button class="task-header-btn complete" onclick="completeTodo('${todo.id}')" title="Completa">✓</button>
+                            <button class="task-header-btn edit" onclick="editTodo('${todo.id}')" title="Modifica">✏️</button>
+                            <button class="task-header-btn delete" onclick="deleteTodo('${todo.id}')" title="Elimina">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="task-description-box ${!todo.description ? 'empty' : ''}">
+                        ${todo.description || 'Nessuna descrizione disponibile'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Todo modal functions
+        function openAddTodoModal() {
+            window.editingTodoId = null;
+            document.getElementById('todo-title').value = '';
+            document.getElementById('todo-description').value = '';
+            document.querySelector('#todo-modal h3').textContent = '⏰ Nuova Attività';
+            document.querySelector('#todo-modal .btn:not(.btn-cancel)').textContent = '➕ Aggiungi';
+            document.getElementById('todo-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTodoModal() {
+            document.getElementById('todo-modal').style.display = 'none';
+            document.body.style.overflow = '';
+            window.editingTodoId = null;
+        }
+
+        function closeModalOnBackground(event) {
+            if (event.target === event.currentTarget) {
+                closeTodoModal();
+            }
+        }
+
+        function saveTodoTask() {
+            const title = document.getElementById('todo-title').value.trim();
+            const description = document.getElementById('todo-description').value.trim();
+            
+            if (!title) {
+                alert('⚠️ Inserisci il titolo dell\'attività!');
+                return;
+            }
+            
+            const todoData = {
+                title: title,
+                description: description,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            if (window.editingTodoId) {
+                // Edit existing todo
+                const todoIndex = todos.findIndex(t => t.id === window.editingTodoId);
+                if (todoIndex !== -1) {
+                    todos[todoIndex] = { ...todos[todoIndex], ...todoData };
+                    saveToFirebase();
+                    showSuccessMessage('Attività modificata!');
+                }
+            } else {
+                // Add new todo
+                const newTodo = {
+                    id: Date.now().toString(),
+                    ...todoData
+                };
+                todos.push(newTodo);
+                saveToFirebase();
+                showSuccessMessage('Attività aggiunta!');
+            }
+            
+            closeTodoModal();
+            renderTasks();
+        }
+
+        function editTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (!todo) return;
+            
+            document.getElementById('todo-title').value = todo.title;
+            document.getElementById('todo-description').value = todo.description;
+            window.editingTodoId = id;
+            document.querySelector('#todo-modal h3').textContent = '✏️ Modifica Attività';
+            document.querySelector('#todo-modal .btn:not(.btn-cancel)').textContent = '💾 Salva';
+            document.getElementById('todo-modal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function completeTodo(id) {
+            if (confirm('✅ Completare questa attività?')) {
+                const todoIndex = todos.findIndex(t => t.id === id);
+                if (todoIndex !== -1) {
+                    todos[todoIndex].completed = true;
+                    todos[todoIndex].completedAt = new Date().toISOString();
+                    saveToFirebase();
+                    renderTasks();
+                    showSuccessMessage('Attività completata!');
+                }
+            }
+        }
+
+        function deleteTodo(id) {
+            if (confirm('🗑️ Eliminare questa attività?')) {
+                todos = todos.filter(t => t.id !== id);
+                saveToFirebase();
+                renderTasks();
+                showSuccessMessage('Attività eliminata!');
+            }
+        }
+
+        // Firebase data functions
+        function saveToFirebase() {
+            if (!currentUser || !db) return;
+            
+            const userId = currentUser.uid;
+            db.collection('users').doc(userId).set({
+                todos: todos,
+                lastUpdated: new Date()
+            }).catch(error => {
+                console.error('Save error:', error);
+            });
+        }
+
+        function loadUserData() {
+            if (!currentUser || !db) return;
+            
+            const userId = currentUser.uid;
+            db.collection('users').doc(userId).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        todos = data.todos || [];
+                        renderTasks();
+                        console.log('✅ Data loaded');
+                    }
+                })
+                .catch(error => {
+                    console.error('Load error:', error);
+                });
+        }
+
+        // Notes function
+        function saveNote() {
+            const noteText = document.getElementById('notes-text').value.trim();
+            if (!noteText) {
+                alert('⚠️ Scrivi qualcosa prima di salvare!');
+                return;
+            }
+            
+            document.getElementById('notes-text').value = '';
+            showSuccessMessage('Nota salvata!');
+            // TODO: Implement full notes functionality
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 OfficeFlow starting...');
+            
+            // Wait a bit for Firebase to load
+            setTimeout(() => {
+                if (typeof firebase !== 'undefined') {
+                    initFirebase();
+                } else {
+                    console.error('❌ Firebase not loaded');
+                    alert('Errore di caricamento. Ricarica la pagina.');
+                }
+            }, 500);
+        });
+    </script>
 </body>
 </html>
