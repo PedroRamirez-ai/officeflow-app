@@ -1728,15 +1728,28 @@
 
                 // Setup auth listener
                 auth.onAuthStateChanged((user) => {
-                    if (user) {
-                        currentUser = user;
-                        showMainApp();
+                if (user) {
+                    console.log('👤 User authenticated:', user.uid, user.email);
+                    currentUser = user;
+                    showMainApp();
+                    
+                    // Carica dati specifici dell'utente con delay per assicurare il caricamento
+                    setTimeout(() => {
                         loadUserData();
-                    } else {
-                        currentUser = null;
-                        showAuthScreen();
-                    }
-                });
+                    }, 500);
+                } else {
+                    console.log('👤 User signed out');
+                    currentUser = null;
+                    
+                    // Pulisci dati locali quando l'utente si disconnette
+                    todos = [];
+                    deadlineTasks = [];
+                    completedTasks = [];
+                    notes = [];
+                    
+                    showAuthScreen();
+                }
+            });
             } catch (error) {
                 console.error('❌ Firebase error:', error);
                 alert('Errore di connessione. Ricarica la pagina.');
@@ -2016,43 +2029,85 @@ function resetPassword() {
 
         // Firebase data functions
         function saveToFirebase() {
-            if (!currentUser || !db) return;
-            
-            const userId = currentUser.uid;
-            db.collection('users').doc(userId).set({
-                todos: todos,
-                deadlineTasks: deadlineTasks,
-                completedTasks: completedTasks,
-                notes: notes,
-                lastUpdated: new Date()
-            }).catch(error => {
-                console.error('Save error:', error);
-            });
+        if (!currentUser || !db) {
+            console.warn('❌ User not authenticated or database not available');
+            return Promise.reject('User not authenticated');
+        }
+        
+        const userId = currentUser.uid;
+        console.log('💾 Saving data for user:', userId);
+        
+        return db.collection('users').doc(userId).set({
+            todos: todos,
+            deadlineTasks: deadlineTasks,
+            completedTasks: completedTasks,
+            notes: notes,
+            userEmail: currentUser.email, // Per debug
+            lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true }) // merge: true per evitare sovrascritture complete
+        .then(() => {
+            console.log('✅ Data saved successfully for user:', userId);
+        })
+        .catch(error => {
+            console.error('❌ Save error for user:', userId, error);
+            alert('Errore nel salvataggio dei dati. Riprova.');
+        });
         }
 
         function loadUserData() {
-            if (!currentUser || !db) return;
+            if (!currentUser || !db) {
+                console.warn('❌ User not authenticated or database not available');
+                return Promise.reject('User not authenticated');
+            }
             
             const userId = currentUser.uid;
-            db.collection('users').doc(userId).get()
+            console.log('📥 Loading data for user:', userId);
+            
+            return db.collection('users').doc(userId).get()
                 .then(doc => {
                     if (doc.exists) {
                         const data = doc.data();
+                        console.log('📊 Data found for user:', userId, data);
+                        
+                        // Carica i dati specifici dell'utente
                         todos = data.todos || [];
                         deadlineTasks = data.deadlineTasks || [];
                         completedTasks = data.completedTasks || [];
                         notes = data.notes || [];
                         
-                        // Render all views with loaded data
-                        renderCalendar();
-                        renderTasks();
-                        renderHistory();
-                        renderNotes();
-                        console.log('✅ Data loaded');
+                        console.log('✅ Data loaded:', {
+                            todos: todos.length,
+                            deadlineTasks: deadlineTasks.length,
+                            completedTasks: completedTasks.length,
+                            notes: notes.length
+                        });
+                    } else {
+                        console.log('📝 No existing data for user:', userId, '- initializing empty arrays');
+                        // Nuovo utente - inizializza array vuoti
+                        todos = [];
+                        deadlineTasks = [];
+                        completedTasks = [];
+                        notes = [];
+                        
+                        // Salva la struttura iniziale
+                        saveToFirebase();
                     }
+                    
+                    // Renderizza tutte le viste con i dati caricati
+                    renderCalendar();
+                    renderTasks();
+                    renderHistory();
+                    renderNotes();
                 })
                 .catch(error => {
-                    console.error('Load error:', error);
+                    console.error('❌ Load error for user:', userId, error);
+                    alert('Errore nel caricamento dei dati. Ricarica la pagina.');
+                    
+                    // In caso di errore, inizializza array vuoti
+                    todos = [];
+                    deadlineTasks = [];
+                    completedTasks = [];
+                    notes = [];
                 });
         }
 
@@ -3339,5 +3394,6 @@ function resetPassword() {
     </script>
 </body>
 </html>
+
 
 
